@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
+
+<?import javafx.scene.image.ImageView?>
+<GridPane xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.github.kaoticz.nekollector.MainController"
+          alignment="CENTER"
+          gridLinesVisible="true">
+  <padding>
+    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+  </padding>
+
+  <columnConstraints>
+    <ColumnConstraints hgrow="NEVER" minWidth="120.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="300.0" />
+  </columnConstraints>
+
+  <rowConstraints>
+    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
+    <RowConstraints vgrow="ALWAYS" minHeight="10.0" />
+    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
+    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
+  </rowConstraints>
+
+  <!-- Lateral Bar -->
+  <ScrollPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4">
+    <VBox fx:id="sideBarContainer" spacing="5" alignment="CENTER" />
+  </ScrollPane>
+
+  <!-- Image Title -->
+  <TextField text="Title"
+             GridPane.columnIndex="1"
+             GridPane.rowIndex="0"
+             GridPane.halignment="CENTER"
+             GridPane.valignment="CENTER"
+             alignment="CENTER"
+             maxWidth="350" />
+
+  <!-- Image -->
+  <ImageView fx:id="imageView"
+             GridPane.columnIndex="1"
+             GridPane.rowIndex="1"
+             GridPane.halignment="CENTER"
+             GridPane.valignment="CENTER"
+             preserveRatio="true" />
+
+  <!-- Favorite Button -->
+  <Button text="Favorite"
+          GridPane.columnIndex="1"
+          GridPane.rowIndex="2"
+          GridPane.halignment="CENTER"
+          GridPane.valignment="CENTER"
+          onAction="#addFavoriteButton" />
+
+  <!-- Navigation Buttons -->
+  <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+    <!-- Wrapping the Download button in a StackPane to center it -->
+    <StackPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+      <Button text="Download" onAction="#downloadImage" />
+    </StackPane>
+    <Button text="Previous" AnchorPane.leftAnchor="0" onAction="#moveToPreviousImage" />
+    <Button text="Next" AnchorPane.rightAnchor="0" onAction="#moveToNextImage" />
+  </AnchorPane>
+
+</GridPane>
