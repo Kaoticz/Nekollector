@@ -1,16 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.github.kaoticz.nekollector.HelloController">
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.control.TextField?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<GridPane xmlns:fx="http://javafx.com/fxml"
+          fx:controller="com.github.kaoticz.nekollector.HelloController"
+          alignment="CENTER"
+          gridLinesVisible="true">
   <padding>
-    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
   </padding>
 
-  <Label fx:id="welcomeText"/>
-  <Button text="Hello!" onAction="#onHelloButtonClick"/>
-</VBox>
+  <columnConstraints>
+    <ColumnConstraints hgrow="NEVER" minWidth="120.0" />
+    <ColumnConstraints hgrow="ALWAYS" minWidth="300.0" />
+  </columnConstraints>
+
+  <rowConstraints>
+    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
+    <RowConstraints vgrow="ALWAYS" minHeight="10.0" />
+    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
+    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
+  </rowConstraints>
+
+  <!--  The entire sidebar needs to be a ScrollPane-->
+  <Button text="SideBar" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+  <TextField text="Title" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" alignment="CENTER" maxWidth="350" />
+  <Button text="Image" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+  <Button text="Favorite" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+
+  <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+    <Button text="Left" AnchorPane.leftAnchor="0" />
+    <!-- Wrapping the Download button in a StackPane to center it -->
+    <StackPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+      <Button text="Download" />
+    </StackPane>
+    <Button text="Right" AnchorPane.rightAnchor="0" />
+  </AnchorPane>
+
+</GridPane>
+<!--<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"-->
+<!--      fx:controller="com.github.kaoticz.nekollector.HelloController">-->
+<!--  <padding>-->
+<!--    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>-->
+<!--  </padding>-->
+
+<!--  <Label fx:id="welcomeText"/>-->
+<!--  <Button text="Hello!" onAction="#onHelloButtonClick"/>-->
+<!--</VBox>-->
