@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
-public class HelloController {
+public class MainController {
 
     private static int favoriteCounter = 1;
 
