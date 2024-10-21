@@ -1,14 +1,20 @@
 package com.github.kaoticz.nekollector;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
+import javafx.scene.layout.VBox;
 
 public class HelloController {
-    @FXML
-    private Label welcomeText;
+
+    private static int favoriteCounter = 1;
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    private VBox sideBarContainer;
+
+    @FXML
+    public void addFavoriteButton(ActionEvent ignoredEvent) {
+        var button = new Button("Favorite " + favoriteCounter++);
+        sideBarContainer.getChildren().add(button);
     }
 }

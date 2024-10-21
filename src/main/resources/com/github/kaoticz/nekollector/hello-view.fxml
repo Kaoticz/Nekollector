@@ -9,12 +9,14 @@
 
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.ScrollPane?>
 <GridPane xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.github.kaoticz.nekollector.HelloController"
           alignment="CENTER"
           gridLinesVisible="true">
   <padding>
-    <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
   </padding>
 
   <columnConstraints>
@@ -29,28 +31,43 @@
     <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
   </rowConstraints>
 
-  <!--  The entire sidebar needs to be a ScrollPane-->
-  <Button text="SideBar" GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-  <TextField text="Title" GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.halignment="CENTER" GridPane.valignment="CENTER" alignment="CENTER" maxWidth="350" />
-  <Button text="Image" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-  <Button text="Favorite" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+  <!-- Lateral Bar -->
+  <ScrollPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4">
+    <VBox fx:id="sideBarContainer" spacing="5" alignment="CENTER" />
+  </ScrollPane>
 
+  <!-- Image Title -->
+  <TextField text="Title"
+             GridPane.columnIndex="1"
+             GridPane.rowIndex="0"
+             GridPane.halignment="CENTER"
+             GridPane.valignment="CENTER"
+             alignment="CENTER"
+             maxWidth="350" />
+
+  <!-- Image -->
+  <Button text="Image"
+          GridPane.columnIndex="1"
+          GridPane.rowIndex="1"
+          GridPane.halignment="CENTER"
+          GridPane.valignment="CENTER" />
+
+  <!-- Favorite Button -->
+  <Button text="Favorite"
+          GridPane.columnIndex="1"
+          GridPane.rowIndex="2"
+          GridPane.halignment="CENTER"
+          GridPane.valignment="CENTER"
+          onAction="#addFavoriteButton" />
+
+  <!-- Navigation Buttons -->
   <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-    <Button text="Left" AnchorPane.leftAnchor="0" />
+    <Button text="Previous" AnchorPane.leftAnchor="0" />
+    <Button text="Next" AnchorPane.rightAnchor="0" />
     <!-- Wrapping the Download button in a StackPane to center it -->
     <StackPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
       <Button text="Download" />
     </StackPane>
-    <Button text="Right" AnchorPane.rightAnchor="0" />
   </AnchorPane>
 
 </GridPane>
-<!--<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"-->
-<!--      fx:controller="com.github.kaoticz.nekollector.HelloController">-->
-<!--  <padding>-->
-<!--    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>-->
-<!--  </padding>-->
-
-<!--  <Label fx:id="welcomeText"/>-->
-<!--  <Button text="Hello!" onAction="#onHelloButtonClick"/>-->
-<!--</VBox>-->
