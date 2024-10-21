@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ScrollPane?>
 
+<?import javafx.scene.image.ImageView?>
 <GridPane xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.github.kaoticz.nekollector.MainController"
           alignment="CENTER"
@@ -46,11 +47,12 @@
              maxWidth="350" />
 
   <!-- Image -->
-  <Button text="Image"
-          GridPane.columnIndex="1"
-          GridPane.rowIndex="1"
-          GridPane.halignment="CENTER"
-          GridPane.valignment="CENTER" />
+  <ImageView fx:id="imageView"
+             GridPane.columnIndex="1"
+             GridPane.rowIndex="1"
+             GridPane.halignment="CENTER"
+             GridPane.valignment="CENTER"
+             preserveRatio="true" />
 
   <!-- Favorite Button -->
   <Button text="Favorite"
@@ -62,12 +64,12 @@
 
   <!-- Navigation Buttons -->
   <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-    <Button text="Previous" AnchorPane.leftAnchor="0" />
-    <Button text="Next" AnchorPane.rightAnchor="0" />
     <!-- Wrapping the Download button in a StackPane to center it -->
     <StackPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-      <Button text="Download" />
+      <Button text="Download" onAction="#downloadImage" />
     </StackPane>
+    <Button text="Previous" AnchorPane.leftAnchor="0" onAction="#moveToPreviousImage" />
+    <Button text="Next" AnchorPane.rightAnchor="0" onAction="#moveToNextImage" />
   </AnchorPane>
 
 </GridPane>
