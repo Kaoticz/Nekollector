@@ -19,7 +19,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
-        imageView.setImage(Statics.loadingImage);
+        imageView.setImage(Statics.LOADING_IMAGE);
     }
 
     @FXML
