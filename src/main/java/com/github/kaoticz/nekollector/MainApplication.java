@@ -15,7 +15,7 @@ public class MainApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Nekollector");
-        stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("/assets/catgirl_crop.jpg"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("/assets/catgirl_crop.png"))));
         stage.setMinHeight(400);
         stage.setMinWidth(500);
         stage.setHeight(700);
