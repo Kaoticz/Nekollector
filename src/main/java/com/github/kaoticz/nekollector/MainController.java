@@ -1,11 +1,14 @@
 package com.github.kaoticz.nekollector;
 
+import com.github.kaoticz.nekollector.api.nekosia.services.NekosiaService;
 import com.github.kaoticz.nekollector.common.Statics;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
+
+import java.io.IOException;
 
 public class MainController {
 
@@ -36,6 +39,15 @@ public class MainController {
     @FXML
     public void moveToNextImage(ActionEvent ignoredEvent) {
         System.out.println("moveToNextImage press!");
+        imageView.setImage(Statics.LOADING_IMAGE);
+
+        var service = new NekosiaService();
+        try {
+            service.getRandomCatgirl().thenAccept(imageView::setImage);
+        }
+        catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
