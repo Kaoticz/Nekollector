@@ -12,7 +12,7 @@ import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
 public class NekosiaService {
-    public CompletableFuture<Image> getRandomCatgirl() throws IOException, InterruptedException {
+    public CompletableFuture<Image> getRandomCatgirlAsync() throws IOException, InterruptedException {
         var request = HttpRequest.newBuilder()
                 .uri(URI.create("https://api.nekosia.cat/api/v1/images/catgirl?rating=safe&blacklistedTags=swimwear,swimsuit,bikini,sea,swim-ring"))
                 .timeout(Duration.ofSeconds(10))

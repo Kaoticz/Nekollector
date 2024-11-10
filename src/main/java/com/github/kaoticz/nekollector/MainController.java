@@ -2,10 +2,12 @@ package com.github.kaoticz.nekollector;
 
 import com.github.kaoticz.nekollector.api.nekosia.services.NekosiaService;
 import com.github.kaoticz.nekollector.common.Statics;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -21,8 +23,17 @@ public class MainController {
     private ImageView imageView;
 
     @FXML
+    private StackPane imageContainer;
+
+    @FXML
     public void initialize() {
         imageView.setImage(Statics.LOADING_IMAGE);
+        Platform.runLater(() -> {
+            var stage = imageView.getScene().getWindow();
+
+            stage.widthProperty().addListener((_, _, _) -> imageView.setFitWidth(imageContainer.getWidth() - 10));
+            stage.heightProperty().addListener((_, _, _) -> imageView.setFitHeight(imageContainer.getHeight() - 10));
+        });
     }
 
     @FXML
@@ -43,7 +54,7 @@ public class MainController {
 
         var service = new NekosiaService();
         try {
-            service.getRandomCatgirl().thenAccept(imageView::setImage);
+            service.getRandomCatgirlAsync().thenAccept(imageView::setImage);
         }
         catch (IOException | InterruptedException e) {
             e.printStackTrace();
