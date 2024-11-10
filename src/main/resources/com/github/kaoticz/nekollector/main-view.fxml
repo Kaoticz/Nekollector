@@ -38,12 +38,13 @@
   </ScrollPane>
 
   <!-- Image Title -->
-  <TextField text="Title"
+  <TextField fx:id="titleBar"
              GridPane.columnIndex="1"
              GridPane.rowIndex="0"
              GridPane.halignment="CENTER"
              GridPane.valignment="CENTER"
              alignment="CENTER"
+             editable="false"
              maxWidth="350" />
 
   <!-- Image -->
