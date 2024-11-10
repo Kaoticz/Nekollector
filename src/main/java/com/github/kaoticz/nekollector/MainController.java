@@ -81,8 +81,8 @@ public class MainController {
                     if (ex == null) {
                         titleBar.setText(randomApiService.getServiceName());
                     } else {
-                        titleBar.setText("Request to " + randomApiService.getServiceName() + " has failed");
-                        System.out.println(ex.fillInStackTrace());
+                        titleBar.setText("Request to " + randomApiService.getServiceName() + " has failed: " + ex.fillInStackTrace().getCause().getMessage());
+                        System.out.println(ex.fillInStackTrace().getCause());
                     }
 
                     return result;
