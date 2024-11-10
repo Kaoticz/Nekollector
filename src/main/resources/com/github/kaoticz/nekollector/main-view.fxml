@@ -10,8 +10,8 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.ScrollPane?>
-
 <?import javafx.scene.image.ImageView?>
+
 <GridPane xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.github.kaoticz.nekollector.MainController"
           alignment="CENTER"
@@ -22,14 +22,14 @@
 
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="120.0" />
-    <ColumnConstraints hgrow="ALWAYS" minWidth="300.0" />
+    <ColumnConstraints hgrow="SOMETIMES" />
   </columnConstraints>
 
   <rowConstraints>
-    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
-    <RowConstraints vgrow="ALWAYS" minHeight="10.0" />
-    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
-    <RowConstraints vgrow="SOMETIMES" minHeight="10.0" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="SOMETIMES" />
+    <RowConstraints vgrow="NEVER" />
+    <RowConstraints vgrow="NEVER" />
   </rowConstraints>
 
   <!-- Lateral Bar -->
@@ -38,21 +38,19 @@
   </ScrollPane>
 
   <!-- Image Title -->
-  <TextField text="Title"
+  <TextField fx:id="titleBar"
              GridPane.columnIndex="1"
              GridPane.rowIndex="0"
              GridPane.halignment="CENTER"
              GridPane.valignment="CENTER"
              alignment="CENTER"
+             editable="false"
              maxWidth="350" />
 
   <!-- Image -->
-  <ImageView fx:id="imageView"
-             GridPane.columnIndex="1"
-             GridPane.rowIndex="1"
-             GridPane.halignment="CENTER"
-             GridPane.valignment="CENTER"
-             preserveRatio="true" />
+  <StackPane fx:id="imageContainer" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+    <ImageView fx:id="imageView" preserveRatio="true" />
+  </StackPane>
 
   <!-- Favorite Button -->
   <Button text="Favorite"

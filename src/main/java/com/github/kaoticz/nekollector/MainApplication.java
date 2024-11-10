@@ -16,8 +16,8 @@ public class MainApplication extends Application {
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("Nekollector");
         stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("/assets/catgirl_crop.png"))));
-        stage.setMinHeight(400);
-        stage.setMinWidth(500);
+        stage.setMinHeight(300);
+        stage.setMinWidth(400);
         stage.setHeight(700);
         stage.setWidth(800);
         stage.setScene(scene);
