@@ -14,8 +14,8 @@ public class MainApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Nekollector");
-        stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("/assets/catgirl_crop.png"))));
+        stage.setTitle("APIxels");
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("/assets/icon-wallpapers.png"))));
         stage.setMinHeight(300);
         stage.setMinWidth(400);
         stage.setHeight(700);
