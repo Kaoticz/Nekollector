@@ -21,6 +21,8 @@ public class MainController {
             new NekosiaService()
     );
 
+    private boolean isLoading;
+
     @FXML
     private TextField titleBar;
 
@@ -51,11 +53,20 @@ public class MainController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            loadNextImage();
-            var stage = imageView.getScene().getWindow();
+            var window = imageView.getScene().getWindow();
 
-            stage.widthProperty().addListener((_, _, _) -> imageView.setFitWidth(imageContainer.getWidth() - 10));
-            stage.heightProperty().addListener((_, _, _) -> imageView.setFitHeight(imageContainer.getHeight() - 10));
+            window.widthProperty().addListener((_, _, _) -> {
+                if (!isLoading) {
+                    imageView.setFitWidth(imageContainer.getWidth() - 10);
+                }
+            });
+            window.heightProperty().addListener((_, _, _) -> {
+                if (!isLoading) {
+                    imageView.setFitHeight(imageContainer.getHeight() - 10);
+                }
+            });
+
+            loadNextImage();
         });
     }
 
@@ -110,6 +121,7 @@ public class MainController {
      * Prepares the view for an image change and loads the next image.
      */
     private void loadNextImage() {
+        isLoading = true;
         this.imageView.setImage(Statics.LOADING_IMAGE);
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
         this.titleBar.setText("...");
@@ -140,6 +152,8 @@ public class MainController {
 
                         // TODO: set error image here
                     }
+
+                    isLoading = false;
 
                     return apiResult;
                 });
