@@ -1,6 +1,6 @@
 package com.github.kaoticz.nekollector.api.abstractions;
 
-import javafx.scene.image.Image;
+import com.github.kaoticz.nekollector.api.models.ApiResult;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -9,13 +9,8 @@ import java.util.concurrent.CompletableFuture;
  */
 public interface ApiService {
     /**
-     * Gets the name of the service.
-     * @return The name of the service.
-     */
-    String getServiceName();
-    /**
      * Gets a random image from the API.
      * @return A promise of the request with an image.
      */
-    CompletableFuture<Image> getImageAsync();
+    CompletableFuture<ApiResult> getImageAsync();
 }
