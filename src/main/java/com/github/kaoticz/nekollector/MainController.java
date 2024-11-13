@@ -165,7 +165,12 @@ public class MainController {
      */
     private void setResizedImage(Image image) {
         this.imageView.setImage(image);
-        this.imageView.setFitHeight(this.imageContainer.getHeight());
+
+        if (image.getWidth() > image.getHeight() && image.getWidth() > this.imageContainer.getWidth()) {
+            this.imageView.setFitWidth(this.imageContainer.getWidth());
+        } else {
+            this.imageView.setFitHeight(this.imageContainer.getHeight());
+        }
     }
 
     /**
