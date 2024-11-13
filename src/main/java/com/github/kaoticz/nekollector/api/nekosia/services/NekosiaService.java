@@ -2,6 +2,7 @@ package com.github.kaoticz.nekollector.api.nekosia.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.kaoticz.nekollector.api.abstractions.ApiService;
+import com.github.kaoticz.nekollector.api.models.ApiResult;
 import com.github.kaoticz.nekollector.api.nekosia.models.NekosiaResponse;
 import com.github.kaoticz.nekollector.common.Statics;
 import javafx.scene.image.Image;
@@ -20,19 +21,14 @@ public class NekosiaService implements ApiService {
             .build();
 
     @Override
-    public String getServiceName() {
-        return "Nekosia";
-    }
-
-    @Override
-    public CompletableFuture<Image> getImageAsync() {
+    public CompletableFuture<ApiResult> getImageAsync() {
         return Statics.HTTP_CLIENT.sendAsync(REQUEST, HttpResponse.BodyHandlers.ofString())
                 .thenApply(httpResponse -> {
                     try {
                         var json = httpResponse.body();
                         var nekosiaResponse = Statics.JSON_DESERIALIZER.readValue(json, NekosiaResponse.class);
 
-                        return new Image(nekosiaResponse.getUrl());
+                        return new ApiResult("Nekosia", new Image(nekosiaResponse.getUrl()));
                     } catch (JsonProcessingException e) {
                         throw new CompletionException(e);
                     }

@@ -53,7 +53,8 @@
   </StackPane>
 
   <!-- Favorite Button -->
-  <Button text="Favorite"
+  <Button fx:id="favoriteButton"
+          text="Favorite"
           GridPane.columnIndex="1"
           GridPane.rowIndex="2"
           GridPane.halignment="CENTER"
@@ -64,10 +65,10 @@
   <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
     <!-- Wrapping the Download button in a StackPane to center it -->
     <StackPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-      <Button text="Download" onAction="#downloadImage" />
+      <Button fx:id="downloadButton" text="Download" onAction="#downloadImage" />
     </StackPane>
-    <Button text="Previous" AnchorPane.leftAnchor="0" onAction="#moveToPreviousImage" />
-    <Button text="Next" AnchorPane.rightAnchor="0" onAction="#moveToNextImage" />
+    <Button fx:id="previousButton" text="Previous" disable="true" AnchorPane.leftAnchor="0" onAction="#moveToPreviousImage" />
+    <Button fx:id="nextButton" text="Next" AnchorPane.rightAnchor="0" onAction="#moveToNextImage" />
   </AnchorPane>
 
 </GridPane>
