@@ -128,13 +128,10 @@ public class MainController {
         toggleAllButtons(true, false);
 
         this.apiCoordinator.getNextImageAsync()
-                .thenApply(apiResult -> {
-                    setResizedImage(apiResult.apiImage());
-                    return apiResult;
-                })
                 .handle((apiResult, ex) -> {
                     if (ex == null) {
                         this.titleBar.setText(apiResult.serviceName());
+                        setResizedImage(apiResult.apiImage());
                         toggleAllButtons(false, true);
                     } else {
                         var errorCause = ex.fillInStackTrace().getCause();
@@ -165,12 +162,8 @@ public class MainController {
      */
     private void setResizedImage(Image image) {
         this.imageView.setImage(image);
-
-        if (image.getWidth() > image.getHeight() && image.getWidth() > this.imageContainer.getWidth()) {
-            this.imageView.setFitWidth(this.imageContainer.getWidth());
-        } else {
-            this.imageView.setFitHeight(this.imageContainer.getHeight());
-        }
+        this.imageView.setFitWidth(this.imageContainer.getWidth());
+        this.imageView.setFitHeight(this.imageContainer.getHeight());
     }
 
     /**
