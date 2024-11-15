@@ -14,8 +14,7 @@
 
 <GridPane xmlns:fx="http://javafx.com/fxml"
           fx:controller="com.github.kaoticz.nekollector.MainController"
-          alignment="CENTER"
-          gridLinesVisible="true">
+          alignment="CENTER">
   <padding>
     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
   </padding>
@@ -59,7 +58,7 @@
           GridPane.rowIndex="2"
           GridPane.halignment="CENTER"
           GridPane.valignment="CENTER"
-          onAction="#addFavoriteButton" />
+          onAction="#handleFavoriteButton" />
 
   <!-- Navigation Buttons -->
   <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">

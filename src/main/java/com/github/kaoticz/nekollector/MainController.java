@@ -60,20 +60,20 @@ public class MainController {
 
         for (var favorite : favorites.entrySet()) {
             var mockApiResult = new ApiResult(favorite.getValue(), Statics.LOADING_IMAGE);
-            this.favoritesManager.addFavorite(mockApiResult);
-            this.sideBarContainer.getChildren().add(favoritesManager.createFavoriteButton(mockApiResult));
+            var stackPane = this.favoritesManager.createFavoriteContainer(mockApiResult);
+            this.sideBarContainer.getChildren().add(stackPane);
             var innerCounter = counter++;
 
             CompletableFuture.runAsync(() -> {
-                try {
-                    var apiResult = new ApiResult(favorite.getValue(), new Image(favorite.getKey()));
-                    this.favoritesManager.updateFavorite(favorite.getValue(), apiResult);
+                var apiResult = new ApiResult(favorite.getValue(), new Image(favorite.getKey()));
+                this.favoritesManager.addFavorite(apiResult);
 
-                    // Set the view components in a JavaFX thread.
-                    Platform.runLater(() -> this.sideBarContainer.getChildren().set(innerCounter, this.favoritesManager.createFavoriteButton(apiResult)));
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
+                // Set the view components in a JavaFX thread.
+                Platform.runLater(() -> {
+                    var updatedStackPanel = this.favoritesManager.createFavoriteContainer(apiResult);
+                    setFavoriteButtonAction(updatedStackPanel, apiResult.apiImage().getUrl());
+                    this.sideBarContainer.getChildren().set(innerCounter, updatedStackPanel);
+                });
             });
         }
     }
@@ -84,16 +84,16 @@ public class MainController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            var window = imageView.getScene().getWindow();
+            var window = this.imageView.getScene().getWindow();
 
             window.widthProperty().addListener((_, _, _) -> {
                 if (!isLoading) {
-                    imageView.setFitWidth(imageContainer.getWidth() - 10);
+                    this.imageView.setFitWidth(imageContainer.getWidth() - 10);
                 }
             });
             window.heightProperty().addListener((_, _, _) -> {
                 if (!isLoading) {
-                    imageView.setFitHeight(imageContainer.getHeight() - 10);
+                    this.imageView.setFitHeight(imageContainer.getHeight() - 10);
                 }
             });
 
@@ -107,16 +107,29 @@ public class MainController {
      * @param ignoredEvent The event arguments.
      */
     @FXML
-    public void addFavoriteButton(ActionEvent ignoredEvent) {
+    public void handleFavoriteButton(ActionEvent ignoredEvent) {
         var imageUrl = imageView.getImage().getUrl();
 
         if (favoritesManager.isFavorite(imageUrl)) {
-            // TODO: remove button
-            favoritesManager.removeFavorite(imageUrl);
+            // Remove favorite button
+            this.sideBarContainer.getChildren()
+                    .stream()
+                    .filter(node -> node instanceof StackPane)
+                    .map(node -> (StackPane)node)
+                    .filter(stackPane -> stackPane.getChildren().stream().anyMatch(node -> node instanceof ImageView image && image.getImage().getUrl().equals(imageUrl)))
+                    .findFirst()
+                    .ifPresent(stackPane -> this.sideBarContainer.getChildren().remove(stackPane));
+
+            this.favoritesManager.removeFavorite(imageUrl);
         } else {
-            var apiResult = new ApiResult(titleBar.getText(), imageView.getImage());
-            favoritesManager.addFavorite(apiResult);
-            this.sideBarContainer.getChildren().add(favoritesManager.createFavoriteButton(apiResult));
+            // Add favorite button
+            var apiResult = new ApiResult(this.titleBar.getText(), this.imageView.getImage());
+            this.favoritesManager.addFavorite(apiResult);
+
+            var stackPane = this.favoritesManager.createFavoriteContainer(apiResult);
+            setFavoriteButtonAction(stackPane, apiResult.apiImage().getUrl());
+
+            this.sideBarContainer.getChildren().add(stackPane);
         }
     }
 
@@ -136,6 +149,7 @@ public class MainController {
 
         this.titleBar.setText(apiResult.serviceName());
         setResizedImage(apiResult.apiImage());
+        deselectFavoriteButton(this.sideBarContainer);
     }
 
     /**
@@ -166,6 +180,7 @@ public class MainController {
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
         this.titleBar.setText("...");
         toggleAllButtons(true, false);
+        deselectFavoriteButton(this.sideBarContainer);
 
         this.apiCoordinator.getNextImageAsync()
                 .handle((apiResult, ex) -> {
@@ -221,6 +236,45 @@ public class MainController {
             this.previousButton.setDisable(false);
         } else if (protectPreviousButton && apiCoordinator.currentIndex() < 1) {
             this.previousButton.setDisable(true);
+        }
+    }
+
+    private void setFavoriteButtonAction(StackPane stackPane, String imageUrl) {
+        var button = (Button)stackPane.getChildren()
+                .filtered(node -> node instanceof Button)
+                .getFirst();
+
+        button.setDisable(false);
+        button.setOnMouseClicked(_ -> {
+            deselectFavoriteButton(this.sideBarContainer);
+
+            // Select the current button
+            button.setBorder(Statics.SELECTION_BORDER);
+
+            // Display the selected image
+            var favorite = favoritesManager.getCachedFavorite(imageUrl);
+            titleBar.setText(favorite.serviceName());
+            setResizedImage(favorite.apiImage());
+        });
+    }
+
+    private void deselectFavoriteButton(VBox sideBarContainer) {
+        // Find the selected button and deselect it
+        var selectedButtons = sideBarContainer.getChildren()
+                .stream()
+                .filter(node -> node instanceof StackPane)
+                .map(node -> (StackPane)node)
+                .flatMap(node -> node.getChildren().stream())
+                .filter(node -> node instanceof Button)
+                .map(node -> (Button)node)
+                .filter(btn -> btn.getBorder() != Statics.TRANSPARENT_BORDER)
+                .toList();
+
+        // If the user selects favorites too quickly, there might be a possibility
+        // of more than one button being selected at a time, so we iterate through
+        // all of them
+        for (var selectedButton : selectedButtons) {
+            selectedButton.setBorder(Statics.TRANSPARENT_BORDER);
         }
     }
 }

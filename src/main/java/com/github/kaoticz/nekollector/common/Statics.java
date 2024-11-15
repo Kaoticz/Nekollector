@@ -4,6 +4,12 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import javafx.scene.image.Image;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Paint;
+
 import java.net.http.HttpClient;
 import java.util.Objects;
 
@@ -20,6 +26,16 @@ public class Statics {
      * The program's HTTP client.
      */
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+
+    /**
+     * Defines a transparent border.
+     */
+    public static final Border TRANSPARENT_BORDER = new Border(new BorderStroke(Paint.valueOf("transparent"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM));
+
+    /**
+     * Defines the border for selected favorite images.
+     */
+    public static final Border SELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("FF0067"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM));
 
     /**
      * The JSON serializer and deserializer.
