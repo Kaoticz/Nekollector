@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class NekosiaResponse {
     private String name;
-    private Image image;
+    private NekosiaImage image;
 
     @JsonGetter("id")
     public String getName() {
@@ -22,7 +22,7 @@ public class NekosiaResponse {
     }
 
     @JsonSetter("image")
-    private void setImage(Image image){
+    private void setImage(NekosiaImage image){
         this.image = image;
     }
 }

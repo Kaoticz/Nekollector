@@ -45,7 +45,7 @@
              GridPane.valignment="CENTER"
              alignment="CENTER"
              editable="false"
-             maxWidth="350" />
+             maxWidth="380" />
 
   <!-- Image -->
   <StackPane fx:id="imageContainer" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >

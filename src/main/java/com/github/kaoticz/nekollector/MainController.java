@@ -1,8 +1,11 @@
 package com.github.kaoticz.nekollector;
 
+import com.github.kaoticz.nekollector.api.models.ApiResult;
 import com.github.kaoticz.nekollector.api.nekosia.services.NekosiaService;
 import com.github.kaoticz.nekollector.common.Statics;
+import com.github.kaoticz.nekollector.config.ConfigManager;
 import com.github.kaoticz.nekollector.services.ApiCoordinator;
+import com.github.kaoticz.nekollector.services.FavoritesManager;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,10 +15,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public class MainController {
+    private final ConfigManager configManager = new ConfigManager();
 
-    private static int favoriteCounter = 1;
+    private final FavoritesManager favoritesManager = new FavoritesManager(configManager);
 
     private final ApiCoordinator apiCoordinator = new ApiCoordinator(
             new NekosiaService()
@@ -47,6 +53,31 @@ public class MainController {
     @FXML
     private Button nextButton;
 
+    private void populateFavoriteButtons() {
+        // Create a copy of the favorites to avoid concurrency issues
+        var favorites = Map.copyOf(this.configManager.getSettings().getFavorites());
+        var counter = 0;
+
+        for (var favorite : favorites.entrySet()) {
+            var mockApiResult = new ApiResult(favorite.getValue(), Statics.LOADING_IMAGE);
+            this.favoritesManager.addFavorite(mockApiResult);
+            this.sideBarContainer.getChildren().add(favoritesManager.createFavoriteButton(mockApiResult));
+            var innerCounter = counter++;
+
+            CompletableFuture.runAsync(() -> {
+                try {
+                    var apiResult = new ApiResult(favorite.getValue(), new Image(favorite.getKey()));
+                    this.favoritesManager.updateFavorite(favorite.getValue(), apiResult);
+
+                    // Set the view components in a JavaFX thread.
+                    Platform.runLater(() -> this.sideBarContainer.getChildren().set(innerCounter, this.favoritesManager.createFavoriteButton(apiResult)));
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            });
+        }
+    }
+
     /**
      * This method is run when the window is loaded for the first time.
      */
@@ -67,6 +98,7 @@ public class MainController {
             });
 
             loadNextImage();
+            populateFavoriteButtons();
         });
     }
 
@@ -76,8 +108,16 @@ public class MainController {
      */
     @FXML
     public void addFavoriteButton(ActionEvent ignoredEvent) {
-        var button = new Button("Favorite " + favoriteCounter++);
-        this.sideBarContainer.getChildren().add(button);
+        var imageUrl = imageView.getImage().getUrl();
+
+        if (favoritesManager.isFavorite(imageUrl)) {
+            // TODO: remove button
+            favoritesManager.removeFavorite(imageUrl);
+        } else {
+            var apiResult = new ApiResult(titleBar.getText(), imageView.getImage());
+            favoritesManager.addFavorite(apiResult);
+            this.sideBarContainer.getChildren().add(favoritesManager.createFavoriteButton(apiResult));
+        }
     }
 
     /**
@@ -136,10 +176,10 @@ public class MainController {
                     } else {
                         var errorCause = ex.fillInStackTrace().getCause();
                         var errorReason = (errorCause.getMessage() == null)
-                                ? errorCause
+                                ? "Operation has timed out"
                                 : errorCause.getMessage();
 
-                        System.out.println(errorCause);
+                        System.out.println(errorReason);
                         this.titleBar.setText("Request has failed: " + errorReason);
                         this.nextButton.setDisable(false);
 
