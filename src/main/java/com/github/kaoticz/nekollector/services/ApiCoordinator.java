@@ -2,6 +2,8 @@ package com.github.kaoticz.nekollector.services;
 
 import com.github.kaoticz.nekollector.api.abstractions.ApiService;
 import com.github.kaoticz.nekollector.api.models.ApiResult;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -24,7 +26,7 @@ public class ApiCoordinator {
      * Handles API requests and manages their results.
      * @param apiServices The API services to be handled.
      */
-    public ApiCoordinator(ApiService... apiServices) {
+    public ApiCoordinator(ApiService @NotNull ... apiServices) {
         if (apiServices.length == 0) {
             throw new IllegalArgumentException("At least one API service must be provided.");
         }

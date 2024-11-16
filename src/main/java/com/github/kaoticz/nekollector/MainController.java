@@ -3,7 +3,8 @@ package com.github.kaoticz.nekollector;
 import com.github.kaoticz.nekollector.api.models.ApiResult;
 import com.github.kaoticz.nekollector.api.nekosia.services.NekosiaService;
 import com.github.kaoticz.nekollector.common.Statics;
-import com.github.kaoticz.nekollector.config.ConfigManager;
+import com.github.kaoticz.nekollector.common.Utilities;
+import com.github.kaoticz.nekollector.config.SettingsManager;
 import com.github.kaoticz.nekollector.services.ApiCoordinator;
 import com.github.kaoticz.nekollector.services.FavoritesManager;
 import javafx.application.Platform;
@@ -15,13 +16,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 public class MainController {
-    private final ConfigManager configManager = new ConfigManager();
+    private final SettingsManager settingsManager = new SettingsManager();
 
-    private final FavoritesManager favoritesManager = new FavoritesManager(configManager);
+    private final FavoritesManager favoritesManager = new FavoritesManager(settingsManager);
 
     private final ApiCoordinator apiCoordinator = new ApiCoordinator(
             new NekosiaService()
@@ -53,31 +56,6 @@ public class MainController {
     @FXML
     private Button nextButton;
 
-    private void populateFavoriteButtons() {
-        // Create a copy of the favorites to avoid concurrency issues
-        var favorites = Map.copyOf(this.configManager.getSettings().getFavorites());
-        var counter = 0;
-
-        for (var favorite : favorites.entrySet()) {
-            var mockApiResult = new ApiResult(favorite.getValue(), Statics.LOADING_IMAGE);
-            var stackPane = this.favoritesManager.createFavoriteContainer(mockApiResult);
-            this.sideBarContainer.getChildren().add(stackPane);
-            var innerCounter = counter++;
-
-            CompletableFuture.runAsync(() -> {
-                var apiResult = new ApiResult(favorite.getValue(), new Image(favorite.getKey()));
-                this.favoritesManager.addFavorite(apiResult);
-
-                // Set the view components in a JavaFX thread.
-                Platform.runLater(() -> {
-                    var updatedStackPanel = this.favoritesManager.createFavoriteContainer(apiResult);
-                    setFavoriteButtonAction(updatedStackPanel, apiResult.apiImage().getUrl());
-                    this.sideBarContainer.getChildren().set(innerCounter, updatedStackPanel);
-                });
-            });
-        }
-    }
-
     /**
      * This method is run when the window is loaded for the first time.
      */
@@ -88,12 +66,12 @@ public class MainController {
 
             window.widthProperty().addListener((_, _, _) -> {
                 if (!isLoading) {
-                    this.imageView.setFitWidth(imageContainer.getWidth() - 10);
+                    this.imageView.setFitWidth(this.imageContainer.getWidth() - 10);
                 }
             });
             window.heightProperty().addListener((_, _, _) -> {
                 if (!isLoading) {
-                    this.imageView.setFitHeight(imageContainer.getHeight() - 10);
+                    this.imageView.setFitHeight(this.imageContainer.getHeight() - 10);
                 }
             });
 
@@ -103,14 +81,43 @@ public class MainController {
     }
 
     /**
+     * Populates the sidebar with buttons for the favorites saved in the settings file.
+     */
+    private void populateFavoriteButtons() {
+        // Create a copy of the favorites to avoid concurrency issues
+        var favorites = Map.copyOf(this.settingsManager.getSettings().getFavorites());
+        var counter = 0;
+
+        for (var favorite : favorites.entrySet()) {
+            var mockApiResult = new ApiResult(favorite.getValue(), Statics.LOADING_IMAGE);
+            var stackPane = this.favoritesManager.createFavoriteContainer(mockApiResult, this.sideBarContainer, this.imageContainer, this.imageView, this.titleBar);
+            Utilities.getFavoriteButton(stackPane).setDisable(true);
+            this.sideBarContainer.getChildren().add(stackPane);
+            var innerCounter = counter++;
+
+            CompletableFuture.runAsync(() -> {
+                var apiResult = new ApiResult(favorite.getValue(), new Image(favorite.getKey()));
+                this.favoritesManager.addFavorite(apiResult);
+
+                // Set the view components in a JavaFX thread.
+                Platform.runLater(() -> {
+                    var updatedStackPanel = this.favoritesManager.createFavoriteContainer(apiResult, this.sideBarContainer, this.imageContainer, this.imageView, this.titleBar);
+                    Utilities.getFavoriteButton(updatedStackPanel).setDisable(false);
+                    this.sideBarContainer.getChildren().set(innerCounter, updatedStackPanel);
+                });
+            });
+        }
+    }
+
+    /**
      * Adds the current image as a favorite.
      * @param ignoredEvent The event arguments.
      */
     @FXML
-    public void handleFavoriteButton(ActionEvent ignoredEvent) {
-        var imageUrl = imageView.getImage().getUrl();
+    public void handleFavoriteButton(@NotNull ActionEvent ignoredEvent) {
+        var imageUrl = this.imageView.getImage().getUrl();
 
-        if (favoritesManager.isFavorite(imageUrl)) {
+        if (this.favoritesManager.isFavorite(imageUrl)) {
             // Remove favorite button
             this.sideBarContainer.getChildren()
                     .stream()
@@ -126,9 +133,7 @@ public class MainController {
             var apiResult = new ApiResult(this.titleBar.getText(), this.imageView.getImage());
             this.favoritesManager.addFavorite(apiResult);
 
-            var stackPane = this.favoritesManager.createFavoriteContainer(apiResult);
-            setFavoriteButtonAction(stackPane, apiResult.apiImage().getUrl());
-
+            var stackPane = this.favoritesManager.createFavoriteContainer(apiResult, this.sideBarContainer, this.imageContainer, this.imageView, this.titleBar);
             this.sideBarContainer.getChildren().add(stackPane);
         }
     }
@@ -138,7 +143,7 @@ public class MainController {
      * @param ignoredEvent The event arguments.
      */
     @FXML
-    public void moveToPreviousImage(ActionEvent ignoredEvent) {
+    public void moveToPreviousImage(@NotNull ActionEvent ignoredEvent) {
         System.out.println("moveToPreviousImage press!");
 
         if (this.apiCoordinator.currentIndex() <= 1) {
@@ -148,8 +153,8 @@ public class MainController {
         var apiResult = this.apiCoordinator.getPreviousImage();
 
         this.titleBar.setText(apiResult.serviceName());
-        setResizedImage(apiResult.apiImage());
-        deselectFavoriteButton(this.sideBarContainer);
+        Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
+        Utilities.deselectFavoriteButton(this.sideBarContainer);
     }
 
     /**
@@ -157,7 +162,7 @@ public class MainController {
      * @param ignoredEvent The event arguments.
      */
     @FXML
-    public void moveToNextImage(ActionEvent ignoredEvent) {
+    public void moveToNextImage(@NotNull ActionEvent ignoredEvent) {
         System.out.println("moveToNextImage press!");
         loadNextImage();
     }
@@ -167,7 +172,7 @@ public class MainController {
      * @param ignoredEvent The event arguments.
      */
     @FXML
-    public void downloadImage(ActionEvent ignoredEvent) {
+    public void downloadImage(@NotNull ActionEvent ignoredEvent) {
         System.out.println("downloadImage press!");
     }
 
@@ -180,13 +185,13 @@ public class MainController {
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
         this.titleBar.setText("...");
         toggleAllButtons(true, false);
-        deselectFavoriteButton(this.sideBarContainer);
+        Utilities.deselectFavoriteButton(this.sideBarContainer);
 
         this.apiCoordinator.getNextImageAsync()
                 .handle((apiResult, ex) -> {
                     if (ex == null) {
                         this.titleBar.setText(apiResult.serviceName());
-                        setResizedImage(apiResult.apiImage());
+                        Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
                         toggleAllButtons(false, true);
                     } else {
                         var errorCause = ex.fillInStackTrace().getCause();
@@ -205,20 +210,11 @@ public class MainController {
                         // TODO: set error image here
                     }
 
+                    Utilities.deselectFavoriteButton(this.sideBarContainer);
                     isLoading = false;
 
                     return apiResult;
                 });
-    }
-
-    /**
-     * Resizes the specified image to the size of the container.
-     * @param image The image to be resized.
-     */
-    private void setResizedImage(Image image) {
-        this.imageView.setImage(image);
-        this.imageView.setFitWidth(this.imageContainer.getWidth());
-        this.imageView.setFitHeight(this.imageContainer.getHeight());
     }
 
     /**
@@ -236,45 +232,6 @@ public class MainController {
             this.previousButton.setDisable(false);
         } else if (protectPreviousButton && apiCoordinator.currentIndex() < 1) {
             this.previousButton.setDisable(true);
-        }
-    }
-
-    private void setFavoriteButtonAction(StackPane stackPane, String imageUrl) {
-        var button = (Button)stackPane.getChildren()
-                .filtered(node -> node instanceof Button)
-                .getFirst();
-
-        button.setDisable(false);
-        button.setOnMouseClicked(_ -> {
-            deselectFavoriteButton(this.sideBarContainer);
-
-            // Select the current button
-            button.setBorder(Statics.SELECTION_BORDER);
-
-            // Display the selected image
-            var favorite = favoritesManager.getCachedFavorite(imageUrl);
-            titleBar.setText(favorite.serviceName());
-            setResizedImage(favorite.apiImage());
-        });
-    }
-
-    private void deselectFavoriteButton(VBox sideBarContainer) {
-        // Find the selected button and deselect it
-        var selectedButtons = sideBarContainer.getChildren()
-                .stream()
-                .filter(node -> node instanceof StackPane)
-                .map(node -> (StackPane)node)
-                .flatMap(node -> node.getChildren().stream())
-                .filter(node -> node instanceof Button)
-                .map(node -> (Button)node)
-                .filter(btn -> btn.getBorder() != Statics.TRANSPARENT_BORDER)
-                .toList();
-
-        // If the user selects favorites too quickly, there might be a possibility
-        // of more than one button being selected at a time, so we iterate through
-        // all of them
-        for (var selectedButton : selectedButtons) {
-            selectedButton.setBorder(Statics.TRANSPARENT_BORDER);
         }
     }
 }
