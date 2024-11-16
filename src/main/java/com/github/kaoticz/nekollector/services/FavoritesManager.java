@@ -12,7 +12,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Paint;
 import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Objects;
@@ -38,8 +37,8 @@ public class FavoritesManager {
      * @param imageUrl The URL to the image.
      * @return True if the image is a favorite, false otherwise.
      */
-    public boolean isFavorite(@NotNull String imageUrl) {
-        return this.favoritesCache.containsKey(imageUrl);
+    public boolean isFavorite(String imageUrl) {
+        return imageUrl != null && this.favoritesCache.containsKey(imageUrl);
     }
 
     /**
@@ -128,7 +127,9 @@ public class FavoritesManager {
             @NotNull VBox sideBarContainer,
             @NotNull StackPane mainImageContainer,
             @NotNull ImageView mainImageView,
-            @NotNull TextField titleBar
+            @NotNull TextField titleBar,
+            @NotNull Button addFavoriteButton,
+            @NotNull Button downloadButton
     ) {
         var stackPane = new StackPane();
 
@@ -149,6 +150,8 @@ public class FavoritesManager {
                 mainImageContainer,
                 mainImageView,
                 titleBar,
+                addFavoriteButton,
+                downloadButton,
                 button,
                 thumbnail,
                 apiResult.apiImage().getUrl()
@@ -166,6 +169,8 @@ public class FavoritesManager {
      * @param mainImageContainer The container that holds the image view.
      * @param mainImageView The image view that renders the main image.
      * @param titleBar The title bar of the application.
+     * @param addFavoriteButton The button that adds or removes favorites.
+     * @param downloadButton The button that locally saves the current image.
      * @param button The favorite button.
      * @param thumbnail The thumbnail for the favorite image.
      * @param imageUrl The URL to the image.
@@ -175,6 +180,8 @@ public class FavoritesManager {
             @NotNull StackPane mainImageContainer,
             @NotNull ImageView mainImageView,
             @NotNull TextField titleBar,
+            @NotNull Button addFavoriteButton,
+            @NotNull Button downloadButton,
             @NotNull Button button,
             @NotNull ImageView thumbnail,
             String imageUrl
@@ -194,6 +201,11 @@ public class FavoritesManager {
 
             // Select the current button
             button.setBorder(Statics.SELECTION_BORDER);
+
+            // Enable the favorite and download buttons
+            addFavoriteButton.setText(Statics.FAVORITE_BUTTON_TEXT);
+            addFavoriteButton.setDisable(false);
+            downloadButton.setDisable(false);
 
             // Display the selected image
             var favorite = getCachedFavorite(imageUrl);

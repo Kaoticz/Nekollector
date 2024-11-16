@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.image.ImageView?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml"
+<GridPane xmlns="http://javafx.com/javafx/17.0.12"
+          xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="com.github.kaoticz.nekollector.MainController"
-          alignment="CENTER">
+          stylesheets="@../../../../assets/styles/styles.css"
+          styleClass="primary-bg"
+          alignment="CENTER" >
   <padding>
-    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0"/>
+    <Insets top="2.0" />
   </padding>
 
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="120.0" />
+    <ColumnConstraints hgrow="NEVER" />
     <ColumnConstraints hgrow="SOMETIMES" />
+    <ColumnConstraints hgrow="NEVER" />
   </columnConstraints>
 
   <rowConstraints>
@@ -32,14 +30,15 @@
   </rowConstraints>
 
   <!-- Lateral Bar -->
-  <ScrollPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4">
-    <VBox fx:id="sideBarContainer" spacing="5" alignment="CENTER" />
+  <ScrollPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4"  scaleX="-1" styleClass="secondary-bg">
+    <VBox fx:id="sideBarContainer" alignment="CENTER" spacing="5" scaleX="-1" />
   </ScrollPane>
 
   <!-- Image Title -->
   <TextField fx:id="titleBar"
              GridPane.columnIndex="1"
              GridPane.rowIndex="0"
+             GridPane.columnSpan="3"
              GridPane.halignment="CENTER"
              GridPane.valignment="CENTER"
              alignment="CENTER"
@@ -47,27 +46,52 @@
              maxWidth="380" />
 
   <!-- Image -->
-  <StackPane fx:id="imageContainer" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" >
+  <StackPane fx:id="imageContainer"
+             GridPane.columnIndex="1"
+             GridPane.rowIndex="1"
+             GridPane.columnSpan="3"
+             GridPane.halignment="CENTER"
+             GridPane.valignment="CENTER" >
     <ImageView fx:id="imageView" preserveRatio="true" />
   </StackPane>
 
   <!-- Favorite Button -->
   <Button fx:id="favoriteButton"
-          text="Favorite"
-          GridPane.columnIndex="1"
+          text="☆ Favorite"
+          GridPane.columnIndex="2"
           GridPane.rowIndex="2"
           GridPane.halignment="CENTER"
           GridPane.valignment="CENTER"
+          styleClass="support-btn"
           onAction="#handleFavoriteButton" />
 
   <!-- Navigation Buttons -->
-  <AnchorPane GridPane.columnIndex="1" GridPane.rowIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-    <!-- Wrapping the Download button in a StackPane to center it -->
-    <StackPane AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
-      <Button fx:id="downloadButton" text="Download" onAction="#downloadImage" />
-    </StackPane>
-    <Button fx:id="previousButton" text="Previous" disable="true" AnchorPane.leftAnchor="0" onAction="#moveToPreviousImage" />
-    <Button fx:id="nextButton" text="Next" AnchorPane.rightAnchor="0" onAction="#moveToNextImage" />
-  </AnchorPane>
+  <Button fx:id="downloadButton"
+          GridPane.columnIndex="2"
+          GridPane.rowIndex="3"
+          GridPane.halignment="CENTER"
+          GridPane.valignment="CENTER"
+          text="⤓ Download"
+          styleClass="support-btn"
+          onAction="#downloadImage" />
+
+  <Button fx:id="previousButton"
+          GridPane.columnIndex="1"
+          GridPane.rowIndex="3"
+          GridPane.halignment="LEFT"
+          GridPane.valignment="CENTER"
+          disable="true"
+          text="❮"
+          styleClass="nav-btn"
+          onAction="#moveToPreviousImage" />
+
+  <Button fx:id="nextButton"
+          GridPane.columnIndex="3"
+          GridPane.rowIndex="3"
+          GridPane.halignment="RIGHT"
+          GridPane.valignment="CENTER"
+          text="❯"
+          styleClass="nav-btn"
+          onAction="#moveToNextImage" />
 
 </GridPane>

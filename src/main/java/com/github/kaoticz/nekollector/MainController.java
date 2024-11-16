@@ -90,7 +90,15 @@ public class MainController {
 
         for (var favorite : favorites.entrySet()) {
             var mockApiResult = new ApiResult(favorite.getValue(), Statics.LOADING_IMAGE);
-            var stackPane = this.favoritesManager.createFavoriteContainer(mockApiResult, this.sideBarContainer, this.imageContainer, this.imageView, this.titleBar);
+            var stackPane = this.favoritesManager.createFavoriteContainer(
+                    mockApiResult,
+                    this.sideBarContainer,
+                    this.imageContainer,
+                    this.imageView,
+                    this.titleBar,
+                    this.favoriteButton,
+                    this.downloadButton
+            );
             Utilities.getFavoriteButton(stackPane).setDisable(true);
             this.sideBarContainer.getChildren().add(stackPane);
             var innerCounter = counter++;
@@ -101,7 +109,15 @@ public class MainController {
 
                 // Set the view components in a JavaFX thread.
                 Platform.runLater(() -> {
-                    var updatedStackPanel = this.favoritesManager.createFavoriteContainer(apiResult, this.sideBarContainer, this.imageContainer, this.imageView, this.titleBar);
+                    var updatedStackPanel = this.favoritesManager.createFavoriteContainer(
+                            apiResult,
+                            this.sideBarContainer,
+                            this.imageContainer,
+                            this.imageView,
+                            this.titleBar,
+                            this.favoriteButton,
+                            this.downloadButton
+                    );
                     Utilities.getFavoriteButton(updatedStackPanel).setDisable(false);
                     this.sideBarContainer.getChildren().set(innerCounter, updatedStackPanel);
                 });
@@ -133,9 +149,19 @@ public class MainController {
             var apiResult = new ApiResult(this.titleBar.getText(), this.imageView.getImage());
             this.favoritesManager.addFavorite(apiResult);
 
-            var stackPane = this.favoritesManager.createFavoriteContainer(apiResult, this.sideBarContainer, this.imageContainer, this.imageView, this.titleBar);
+            var stackPane = this.favoritesManager.createFavoriteContainer(
+                    apiResult,
+                    this.sideBarContainer,
+                    this.imageContainer,
+                    this.imageView,
+                    this.titleBar,
+                    this.favoriteButton,
+                    this.downloadButton
+            );
             this.sideBarContainer.getChildren().add(stackPane);
         }
+
+        this.favoriteButton.setText(getFavoriteButtonText(imageUrl));
     }
 
     /**
@@ -146,13 +172,11 @@ public class MainController {
     public void moveToPreviousImage(@NotNull ActionEvent ignoredEvent) {
         System.out.println("moveToPreviousImage press!");
 
-        if (this.apiCoordinator.currentIndex() <= 1) {
-            this.previousButton.setDisable(true);
-        }
-
+        toggleAllButtons(false, true);
         var apiResult = this.apiCoordinator.getPreviousImage();
 
         this.titleBar.setText(apiResult.serviceName());
+        this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl()));
         Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
         Utilities.deselectFavoriteButton(this.sideBarContainer);
     }
@@ -190,6 +214,8 @@ public class MainController {
         this.apiCoordinator.getNextImageAsync()
                 .handle((apiResult, ex) -> {
                     if (ex == null) {
+                        // The text for buttons can only be set by a JavaFX thread
+                        Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
                         this.titleBar.setText(apiResult.serviceName());
                         Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
                         toggleAllButtons(false, true);
@@ -230,8 +256,19 @@ public class MainController {
 
         if (protectPreviousButton && !disable && apiCoordinator.currentIndex() > 1) {
             this.previousButton.setDisable(false);
-        } else if (protectPreviousButton && apiCoordinator.currentIndex() < 1) {
+        } else if (protectPreviousButton && apiCoordinator.currentIndex() <= 1) {
             this.previousButton.setDisable(true);
         }
+    }
+
+    /**
+     * Gets the appropriate text for the favorite button.
+     * @param imageUrl The URL to the currently set image.
+     * @return The string to display on the favorite button.
+     */
+    private String getFavoriteButtonText(String imageUrl) {
+        return (this.favoritesManager.isFavorite(imageUrl))
+                ? Statics.FAVORITE_BUTTON_TEXT
+                : Statics.NOT_FAVORITE_BUTTON_TEXT;
     }
 }
