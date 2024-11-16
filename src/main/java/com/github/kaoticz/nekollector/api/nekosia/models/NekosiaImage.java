@@ -3,7 +3,7 @@ package com.github.kaoticz.nekollector.api.nekosia.models;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-public class Image {
+public class NekosiaImage {
     private Original original;
 
     @JsonGetter("original")

@@ -7,7 +7,9 @@ module com.github.kaoticz.nekollector {
     requires org.kordamp.bootstrapfx.core;
     requires java.net.http;
     requires com.fasterxml.jackson.databind;
+    requires org.jetbrains.annotations;
     opens com.github.kaoticz.nekollector.api.nekosia.models to com.fasterxml.jackson.databind;
+    opens com.github.kaoticz.nekollector.config to com.fasterxml.jackson.databind;
 
     opens com.github.kaoticz.nekollector to javafx.fxml;
     exports com.github.kaoticz.nekollector;
