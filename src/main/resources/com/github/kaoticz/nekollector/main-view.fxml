@@ -11,10 +11,6 @@
           stylesheets="@../../../../assets/styles/styles.css"
           styleClass="primary-bg"
           alignment="CENTER" >
-  <padding>
-    <Insets top="2.0" />
-  </padding>
-
   <columnConstraints>
     <ColumnConstraints hgrow="NEVER" minWidth="120.0" />
     <ColumnConstraints hgrow="NEVER" />
@@ -34,7 +30,7 @@
     <VBox fx:id="sideBarContainer" alignment="CENTER" spacing="5" scaleX="-1" />
   </ScrollPane>
 
-  <!-- Image Title -->
+  <!-- Image Title Bar -->
   <TextField fx:id="titleBar"
              GridPane.columnIndex="1"
              GridPane.rowIndex="0"
@@ -42,8 +38,13 @@
              GridPane.halignment="CENTER"
              GridPane.valignment="CENTER"
              alignment="CENTER"
-             editable="false"
-             maxWidth="380" />
+             disable="true"
+             maxWidth="380"
+             onKeyTyped="#updateFavoriteName">
+    <GridPane.margin>
+      <Insets top="1" bottom="1" />
+    </GridPane.margin>
+  </TextField>
 
   <!-- Image -->
   <StackPane fx:id="imageContainer"
@@ -63,7 +64,11 @@
           GridPane.halignment="CENTER"
           GridPane.valignment="CENTER"
           styleClass="support-btn"
-          onAction="#handleFavoriteButton" />
+          onAction="#handleFavoriteButton">
+    <GridPane.margin>
+      <Insets top="2" />
+    </GridPane.margin>
+  </Button>
 
   <!-- Navigation Buttons -->
   <Button fx:id="downloadButton"

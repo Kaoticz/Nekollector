@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
@@ -162,6 +163,7 @@ public class MainController {
         }
 
         this.favoriteButton.setText(getFavoriteButtonText(imageUrl));
+        this.titleBar.setDisable(!this.favoritesManager.isFavorite(imageUrl));
     }
 
     /**
@@ -175,7 +177,8 @@ public class MainController {
         toggleAllButtons(false, true);
         var apiResult = this.apiCoordinator.getPreviousImage();
 
-        this.titleBar.setText(apiResult.serviceName());
+
+        setTitleBarText(apiResult);
         this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl()));
         Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
         Utilities.deselectFavoriteButton(this.sideBarContainer);
@@ -200,6 +203,15 @@ public class MainController {
         System.out.println("downloadImage press!");
     }
 
+    @FXML
+    public void updateFavoriteName(@NotNull KeyEvent ignoredEvent) {
+        // Yes, there is no event for when the text field is selected or deselected, so
+        // this will result in the settings file being serialized for every key stroke.
+        // Too bad!
+        var apiResult = new ApiResult(titleBar.getText(), imageView.getImage());
+        this.favoritesManager.updateFavorite(imageView.getImage().getUrl(), apiResult);
+    }
+
     /**
      * Prepares the view for an image change and loads the next image.
      */
@@ -208,17 +220,19 @@ public class MainController {
         this.imageView.setImage(Statics.LOADING_IMAGE);
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
         this.titleBar.setText("...");
+        this.titleBar.setDisable(true);
         toggleAllButtons(true, false);
         Utilities.deselectFavoriteButton(this.sideBarContainer);
 
         this.apiCoordinator.getNextImageAsync()
                 .handle((apiResult, ex) -> {
                     if (ex == null) {
-                        // The text for buttons can only be set by a JavaFX thread
-                        Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
-                        this.titleBar.setText(apiResult.serviceName());
+                        setTitleBarText(apiResult);
                         Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
                         toggleAllButtons(false, true);
+
+                        // The text for buttons can only be set by a JavaFX thread
+                        Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
                     } else {
                         var errorCause = ex.fillInStackTrace().getCause();
                         var errorReason = (errorCause.getMessage() == null)
@@ -227,6 +241,7 @@ public class MainController {
 
                         System.out.println(errorReason);
                         this.titleBar.setText("Request has failed: " + errorReason);
+                        this.titleBar.setDisable(true);
                         this.nextButton.setDisable(false);
 
                         if (this.apiCoordinator.currentIndex() > 1) {
@@ -256,7 +271,7 @@ public class MainController {
 
         if (protectPreviousButton && !disable && apiCoordinator.currentIndex() > 1) {
             this.previousButton.setDisable(false);
-        } else if (protectPreviousButton && apiCoordinator.currentIndex() <= 1) {
+        } else if (protectPreviousButton && apiCoordinator.currentIndex() < 1) {
             this.previousButton.setDisable(true);
         }
     }
@@ -270,5 +285,16 @@ public class MainController {
         return (this.favoritesManager.isFavorite(imageUrl))
                 ? Statics.FAVORITE_BUTTON_TEXT
                 : Statics.NOT_FAVORITE_BUTTON_TEXT;
+    }
+
+    private void setTitleBarText(@NotNull ApiResult apiResult) {
+        var imageUrl = apiResult.apiImage().getUrl();
+        var isFavorite = this.favoritesManager.isFavorite(imageUrl);
+        this.titleBar.setDisable(!isFavorite);
+        this.titleBar.setText(
+                (isFavorite)
+                        ? this.favoritesManager.getCachedFavorite(imageUrl).serviceName()
+                        : apiResult.serviceName()
+        );
     }
 }
