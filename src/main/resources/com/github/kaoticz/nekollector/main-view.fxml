@@ -5,8 +5,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane xmlns="http://javafx.com/javafx/17.0.12"
-          xmlns:fx="http://javafx.com/fxml/1"
+<GridPane xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="com.github.kaoticz.nekollector.MainController"
           stylesheets="@../../../../assets/styles/styles.css"
           styleClass="primary-bg"
@@ -53,7 +52,9 @@
              GridPane.columnSpan="3"
              GridPane.halignment="CENTER"
              GridPane.valignment="CENTER" >
-    <ImageView fx:id="imageView" preserveRatio="true" />
+    <ImageView fx:id="imageView" preserveRatio="true" >
+      <Image url="@../../../../assets/images/loading.gif" />
+    </ImageView>
   </StackPane>
 
   <!-- Favorite Button -->

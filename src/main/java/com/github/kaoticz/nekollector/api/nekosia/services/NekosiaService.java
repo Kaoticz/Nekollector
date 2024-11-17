@@ -28,7 +28,7 @@ public class NekosiaService implements ApiService {
                         var json = httpResponse.body();
                         var nekosiaResponse = Statics.JSON_DESERIALIZER.readValue(json, NekosiaResponse.class);
 
-                        return new ApiResult("Nekosia", new Image(nekosiaResponse.getUrl()));
+                        return new ApiResult("Nekosia API", new Image(nekosiaResponse.getUrl()));
                     } catch (JsonProcessingException e) {
                         throw new CompletionException(e);
                     }
