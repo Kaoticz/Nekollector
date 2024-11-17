@@ -239,9 +239,11 @@ public class MainController {
                         Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
                     } else {
                         var errorCause = ex.fillInStackTrace().getCause();
-                        var errorReason = (errorCause.getMessage() == null)
-                                ? "ERROR: Operation has timed out"
-                                : errorCause.getMessage();
+                        var errorReason = "ERROR: " + (
+                                (errorCause.getMessage() == null)
+                                    ? "Operation has timed out"
+                                    : errorCause.getMessage()
+                        );
 
                         System.out.println("\u001B[31m" + errorReason + "\u001B[0m");
                         this.titleBar.setText("Request has failed: " + errorReason);
