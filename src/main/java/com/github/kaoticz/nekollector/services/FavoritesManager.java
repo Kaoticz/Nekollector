@@ -142,7 +142,7 @@ public class FavoritesManager {
         thumbnail.setPreserveRatio(true);
 
         var button = new Button();
-        button.setBackground(new Background(new BackgroundFill(Paint.valueOf("BCBCBC"), new CornerRadii(15), Insets.EMPTY)));
+        button.setBackground(new Background(new BackgroundFill(Paint.valueOf("BCBCBC"), Statics.SMOOTH_CORNER, Insets.EMPTY)));
         button.setOpacity(0.1);
         button.setCursor(Cursor.HAND);
         button.setDisable(false);

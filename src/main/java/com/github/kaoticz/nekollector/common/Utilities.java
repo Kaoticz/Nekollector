@@ -37,9 +37,9 @@ public class Utilities {
     public static Stream<Button> getFavoriteButtons(@NotNull VBox sideBarContainer) {
         return sideBarContainer.getChildren()
                 .stream()
-                .filter(node -> node instanceof StackPane)
-                .map(node -> (StackPane)node)
-                .flatMap(node -> node.getChildren().stream())
+                .filter(node -> node instanceof Pane)
+                .map(node -> (Pane)node)
+                .flatMap(pane -> pane.getChildren().stream())
                 .filter(node -> node instanceof Button)
                 .map(node -> (Button)node);
     }
@@ -66,9 +66,9 @@ public class Utilities {
         // of them
         sideBarContainer.getChildren()
                 .stream()
-                .filter(node -> node instanceof StackPane)
-                .map(node -> (StackPane)node)
-                .forEach(stackPane -> stackPane.setBorder(Statics.DESELECTION_BORDER));
+                .filter(node -> node instanceof Pane)
+                .map(node -> (Pane)node)
+                .forEach(pane -> pane.setBorder(Statics.DESELECTION_BORDER));
     }
 
     /**

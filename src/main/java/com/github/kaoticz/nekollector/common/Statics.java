@@ -31,14 +31,19 @@ public class Statics {
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
 
     /**
+     * Defines a rounded corner for stroke components.
+     */
+    public static final CornerRadii SMOOTH_CORNER = new CornerRadii(15);
+
+    /**
      * Defines a transparent border.
      */
-    public static final Border DESELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("C8C8C8"), BorderStrokeStyle.SOLID, new CornerRadii(15), BorderStroke.THIN));
+    public static final Border DESELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("C8C8C8"), BorderStrokeStyle.SOLID, SMOOTH_CORNER, BorderStroke.THIN));
 
     /**
      * Defines the border for selected favorite images.
      */
-    public static final Border SELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("FF0067"), BorderStrokeStyle.SOLID, new CornerRadii(15), BorderStroke.MEDIUM));
+    public static final Border SELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("FF0067"), BorderStrokeStyle.SOLID, SMOOTH_CORNER, BorderStroke.MEDIUM));
 
     /**
      * The JSON serializer and deserializer.

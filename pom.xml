@@ -5,9 +5,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.github.Kaoticz</groupId>
-  <artifactId>Nekollector</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>Nekollector</name>
+  <artifactId>APIxels</artifactId>
+  <version>1.0</version>
+  <name>APIxels</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -93,9 +93,9 @@
             <id>default-cli</id>
             <configuration>
               <mainClass>com.github.kaoticz.nekollector/com.github.kaoticz.nekollector.MainApplication</mainClass>
-              <launcher>app</launcher>
-              <jlinkZipName>app</jlinkZipName>
-              <jlinkImageName>app</jlinkImageName>
+              <launcher>APIxels</launcher>
+              <jlinkZipName>APIxels</jlinkZipName>
+              <jlinkImageName>APIxels</jlinkImageName>
               <noManPages>true</noManPages>
               <stripDebug>true</stripDebug>
               <noHeaderFiles>true</noHeaderFiles>
