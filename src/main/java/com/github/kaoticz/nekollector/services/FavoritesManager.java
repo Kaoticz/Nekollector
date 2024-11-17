@@ -137,17 +137,17 @@ public class FavoritesManager {
         stackPane.setPrefWidth(100);
 
         var thumbnail = new ImageView(apiResult.apiImage());
-        thumbnail.setFitHeight(94);
-        thumbnail.setFitWidth(94);
+        thumbnail.setFitHeight(93);
+        thumbnail.setFitWidth(93);
         thumbnail.setPreserveRatio(true);
 
         var button = new Button();
-        button.setBackground(new Background(new BackgroundFill(Paint.valueOf("BCBCBC"), Statics.SMOOTH_CORNER, Insets.EMPTY)));
-        button.setOpacity(0.1);
+        button.setBackground(new Background(new BackgroundFill(Paint.valueOf("717171"), Statics.SMOOTH_CORNER, Insets.EMPTY)));
+        button.setOpacity(0.08);
         button.setCursor(Cursor.HAND);
         button.setDisable(false);
         button.setPrefWidth(100);
-        button.setPrefHeight(thumbnail.getFitHeight());
+        button.setPrefHeight(100);
 
         setFavoriteButtonAction(
                 sideBarContainer,

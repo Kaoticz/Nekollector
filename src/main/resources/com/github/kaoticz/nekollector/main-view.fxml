@@ -27,7 +27,7 @@
 
   <!-- Lateral Bar -->
   <ScrollPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4"  scaleX="-1" styleClass="secondary-bg">
-    <VBox fx:id="sideBarContainer" alignment="CENTER" spacing="5" scaleX="-1">
+    <VBox fx:id="sideBarContainer" alignment="CENTER" spacing="5" scaleX="-1" styleClass="secondary-bg">
     <padding>
       <Insets right="5" />
     </padding>

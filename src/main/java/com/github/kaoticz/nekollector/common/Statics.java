@@ -33,7 +33,7 @@ public class Statics {
     /**
      * Defines a rounded corner for stroke components.
      */
-    public static final CornerRadii SMOOTH_CORNER = new CornerRadii(15);
+    public static final CornerRadii SMOOTH_CORNER = new CornerRadii(8);
 
     /**
      * Defines a transparent border.
