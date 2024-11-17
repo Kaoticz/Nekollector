@@ -1,0 +1,27 @@
+.nav-btn {
+    -fx-background-color: E7E6E7;
+    -fx-font-size: 22px;
+    -fx-cursor: hand;
+}
+
+.nav-btn:pressed {
+    -fx-background-color: C6C5C6;
+}
+
+.support-btn {
+    -fx-background-color: E7E6E7;
+    -fx-font-size: 15px;
+    -fx-cursor: hand;
+}
+
+.support-btn:pressed {
+    -fx-background-color: C6C5C6;
+}
+
+.primary-bg {
+    -fx-background-color: FAF5F8;
+}
+
+.secondary-bg {
+    -fx-background-color: FFFAFD;
+}

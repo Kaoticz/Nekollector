@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -23,11 +24,11 @@ public class MainApplication extends Application {
      * @throws IOException Occurs when loading the view fails.
      */
     @Override
-    public void start(Stage stage) throws IOException {
+    public void start(@NotNull Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 320, 240);
         stage.setTitle("APIxels");
-        stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("/assets/icon-wallpapers.png"))));
+        stage.getIcons().add(new Image(Objects.requireNonNull(MainApplication.class.getResourceAsStream("/assets/images/icon-wallpapers.png"))));
         stage.setMinHeight(300);
         stage.setMinWidth(400);
         stage.setHeight(700);

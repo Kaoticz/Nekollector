@@ -36,7 +36,7 @@ public class ApiCoordinator {
 
     /**
      * Gets the current position in the list of images.
-     * @return The current index in the list.
+     * @return The current index in the list or -1 if the list is empty.
      */
     public int currentIndex() {
         return this.currentIndex;

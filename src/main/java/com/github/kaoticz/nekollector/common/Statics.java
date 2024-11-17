@@ -17,10 +17,13 @@ import java.util.Objects;
  * Contains global objects relevant to the application.
  */
 public class Statics {
+    public static final String FAVORITE_BUTTON_TEXT = "\uD83D\uDFCA Favorite";
+
+    public static final String NOT_FAVORITE_BUTTON_TEXT = "☆ Favorite";
     /**
      * The loading gif shown before the requested image.
      */
-    public static final Image LOADING_IMAGE = new Image(Objects.requireNonNull(Statics.class.getResourceAsStream("/assets/loading.gif")));
+    public static final Image LOADING_IMAGE = new Image(Objects.requireNonNull(Statics.class.getResourceAsStream("/assets/images/loading.gif")));
 
     /**
      * The program's HTTP client.
@@ -35,7 +38,7 @@ public class Statics {
     /**
      * Defines the border for selected favorite images.
      */
-    public static final Border SELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("FF0067"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM));
+    public static final Border SELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("FF0067"), BorderStrokeStyle.SOLID, new CornerRadii(15), BorderStroke.MEDIUM));
 
     /**
      * The JSON serializer and deserializer.
