@@ -31,8 +31,6 @@ public class MainController {
             new NekosiaService()
     );
 
-    private boolean isLoading;
-
     @FXML
     private TextField titleBar;
 
@@ -66,12 +64,12 @@ public class MainController {
             var window = this.imageView.getScene().getWindow();
 
             window.widthProperty().addListener((_, _, _) -> {
-                if (!isLoading) {
+                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
                     this.imageView.setFitWidth(this.imageContainer.getWidth() - 10);
                 }
             });
             window.heightProperty().addListener((_, _, _) -> {
-                if (!isLoading) {
+                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
                     this.imageView.setFitHeight(this.imageContainer.getHeight() - 10);
                 }
             });
@@ -220,7 +218,6 @@ public class MainController {
      * Prepares the view for an image change and loads the next image.
      */
     private void loadNextImage() {
-        isLoading = true;
         this.imageView.setImage(Statics.LOADING_IMAGE);
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
         this.titleBar.setDisable(true);
@@ -250,7 +247,7 @@ public class MainController {
                         this.titleBar.setDisable(true);
                         this.nextButton.setDisable(false);
 
-                        if (this.apiCoordinator.currentIndex() > 1) {
+                        if (this.apiCoordinator.currentIndex() >= 1) {
                             this.previousButton.setDisable(false);
                         }
 
@@ -258,7 +255,6 @@ public class MainController {
                     }
 
                     Utilities.deselectFavoriteButton(this.sideBarContainer);
-                    isLoading = false;
 
                     return apiResult;
                 });

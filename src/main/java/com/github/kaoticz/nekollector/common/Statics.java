@@ -33,7 +33,7 @@ public class Statics {
     /**
      * Defines a transparent border.
      */
-    public static final Border TRANSPARENT_BORDER = new Border(new BorderStroke(Paint.valueOf("transparent"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM));
+    public static final Border DESELECTION_BORDER = new Border(new BorderStroke(Paint.valueOf("C8C8C8"), BorderStrokeStyle.SOLID, new CornerRadii(15), BorderStroke.THIN));
 
     /**
      * Defines the border for selected favorite images.

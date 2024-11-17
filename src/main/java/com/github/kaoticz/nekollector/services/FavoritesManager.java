@@ -132,15 +132,19 @@ public class FavoritesManager {
             @NotNull Button downloadButton
     ) {
         var stackPane = new StackPane();
+        stackPane.setBorder(Statics.DESELECTION_BORDER);
+        stackPane.setPrefHeight(100);
+        stackPane.setPrefWidth(100);
 
         var thumbnail = new ImageView(apiResult.apiImage());
-        thumbnail.setFitHeight(100);
-        thumbnail.setFitWidth(100);
+        thumbnail.setFitHeight(94);
+        thumbnail.setFitWidth(94);
         thumbnail.setPreserveRatio(true);
 
         var button = new Button();
-        button.backgroundProperty().set(new Background(new BackgroundFill(Paint.valueOf("transparent"), CornerRadii.EMPTY, Insets.EMPTY)));
-        button.setBorder(new Border(new BorderStroke(Paint.valueOf("transparent"), BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderStroke.MEDIUM)));
+        button.setBackground(new Background(new BackgroundFill(Paint.valueOf("BCBCBC"), new CornerRadii(15), Insets.EMPTY)));
+        button.setOpacity(0.1);
+        button.setCursor(Cursor.HAND);
         button.setDisable(false);
         button.setPrefWidth(100);
         button.setPrefHeight(thumbnail.getFitHeight());
@@ -186,8 +190,6 @@ public class FavoritesManager {
             @NotNull ImageView thumbnail,
             String imageUrl
     ) {
-        button.setOnMouseEntered(_ -> button.setCursor(Cursor.HAND));
-        button.setOnMouseExited(_ -> button.setCursor(Cursor.DEFAULT));
         button.setOnMousePressed(_ -> {
             thumbnail.setFitWidth(thumbnail.getFitWidth() - 1);
             thumbnail.setFitHeight(thumbnail.getFitHeight() - 1);
@@ -199,8 +201,8 @@ public class FavoritesManager {
         button.setOnMouseClicked(_ -> {
             Utilities.deselectFavoriteButton(sideBarContainer);
 
-            // Select the current button
-            button.setBorder(Statics.SELECTION_BORDER);
+            // Apply a border to the container of the selected button
+            ((Pane)button.getParent()).setBorder(Statics.SELECTION_BORDER);
 
             // Enable the favorite and download buttons
             addFavoriteButton.setText(Statics.FAVORITE_BUTTON_TEXT);

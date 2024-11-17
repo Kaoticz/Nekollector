@@ -10,8 +10,9 @@
           stylesheets="@../../../../assets/styles/styles.css"
           styleClass="primary-bg"
           alignment="CENTER" >
+
   <columnConstraints>
-    <ColumnConstraints hgrow="NEVER" minWidth="120.0" />
+    <ColumnConstraints hgrow="NEVER" prefWidth="125.0" />
     <ColumnConstraints hgrow="NEVER" />
     <ColumnConstraints hgrow="SOMETIMES" />
     <ColumnConstraints hgrow="NEVER" />
@@ -26,7 +27,11 @@
 
   <!-- Lateral Bar -->
   <ScrollPane GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.rowSpan="4"  scaleX="-1" styleClass="secondary-bg">
-    <VBox fx:id="sideBarContainer" alignment="CENTER" spacing="5" scaleX="-1" />
+    <VBox fx:id="sideBarContainer" alignment="CENTER" spacing="5" scaleX="-1">
+    <padding>
+      <Insets right="5" />
+    </padding>
+    </VBox>
   </ScrollPane>
 
   <!-- Image Title Bar -->
@@ -71,7 +76,7 @@
     </GridPane.margin>
   </Button>
 
-  <!-- Navigation Buttons -->
+  <!-- Download Button -->
   <Button fx:id="downloadButton"
           GridPane.columnIndex="2"
           GridPane.rowIndex="3"
@@ -81,6 +86,7 @@
           styleClass="support-btn"
           onAction="#downloadImage" />
 
+  <!-- Previous Button -->
   <Button fx:id="previousButton"
           GridPane.columnIndex="1"
           GridPane.rowIndex="3"
@@ -91,6 +97,7 @@
           styleClass="nav-btn"
           onAction="#moveToPreviousImage" />
 
+  <!-- Next Button -->
   <Button fx:id="nextButton"
           GridPane.columnIndex="3"
           GridPane.rowIndex="3"

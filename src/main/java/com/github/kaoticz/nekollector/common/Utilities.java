@@ -60,13 +60,15 @@ public class Utilities {
      * @param sideBarContainer The sidebar container.
      */
     public static void deselectFavoriteButton(@NotNull VBox sideBarContainer) {
-        // Find the selected button and deselect it
+        // Find the selected button container and deselect it
         // Obs: If the user selects favorites too quickly, there might be a possibility
         // of more than one button being selected at a time, so we iterate through all
         // of them
-        getFavoriteButtons(sideBarContainer)
-                .filter(button -> button.getBorder() != Statics.TRANSPARENT_BORDER)
-                .forEach(selectedButton -> selectedButton.setBorder(Statics.TRANSPARENT_BORDER));
+        sideBarContainer.getChildren()
+                .stream()
+                .filter(node -> node instanceof StackPane)
+                .map(node -> (StackPane)node)
+                .forEach(stackPane -> stackPane.setBorder(Statics.DESELECTION_BORDER));
     }
 
     /**
