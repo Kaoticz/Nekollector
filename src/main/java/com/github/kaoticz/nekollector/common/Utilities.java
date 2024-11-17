@@ -1,6 +1,9 @@
 package com.github.kaoticz.nekollector.common;
 
+import com.github.kaoticz.nekollector.api.models.ApiResult;
+import com.github.kaoticz.nekollector.services.FavoritesManager;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -64,5 +67,22 @@ public class Utilities {
         getFavoriteButtons(sideBarContainer)
                 .filter(button -> button.getBorder() != Statics.TRANSPARENT_BORDER)
                 .forEach(selectedButton -> selectedButton.setBorder(Statics.TRANSPARENT_BORDER));
+    }
+
+    /**
+     * Sets the appropriate status and text to the title bar.
+     * @param apiResult The currently set name and image.
+     * @param favoritesManager The favorites' manager.
+     * @param titleBar The title bar.
+     */
+    public static void setTitleBarText(@NotNull ApiResult apiResult, @NotNull FavoritesManager favoritesManager, @NotNull TextField titleBar) {
+        var imageUrl = apiResult.apiImage().getUrl();
+        var isFavorite = favoritesManager.isFavorite(imageUrl);
+        titleBar.setDisable(!isFavorite);
+        titleBar.setText(
+                (isFavorite)
+                        ? favoritesManager.getCachedFavorite(imageUrl).serviceName()
+                        : apiResult.serviceName()
+        );
     }
 }

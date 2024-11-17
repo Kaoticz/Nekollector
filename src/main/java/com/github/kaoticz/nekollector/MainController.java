@@ -82,6 +82,96 @@ public class MainController {
     }
 
     /**
+     * Adds the current image as a favorite.
+     * @param ignoredEvent The event arguments.
+     */
+    @FXML
+    public void handleFavoriteButton(@NotNull ActionEvent ignoredEvent) {
+        var imageUrl = this.imageView.getImage().getUrl();
+
+        if (this.favoritesManager.isFavorite(imageUrl)) {
+            this.sideBarContainer.getChildren()
+                    .stream()
+                    .filter(node -> node instanceof StackPane)
+                    .map(node -> (StackPane)node)
+                    .filter(stackPane -> stackPane.getChildren().stream().anyMatch(node -> node instanceof ImageView image && image.getImage().getUrl().equals(imageUrl)))
+                    .findFirst()
+                    .ifPresent(stackPane -> this.sideBarContainer.getChildren().remove(stackPane));
+
+            this.favoritesManager.removeFavorite(imageUrl);
+            System.out.println("Removed favorite " + titleBar.getText());
+        } else {
+            var apiResult = new ApiResult(this.titleBar.getText(), this.imageView.getImage());
+            this.favoritesManager.addFavorite(apiResult);
+
+            var stackPane = this.favoritesManager.createFavoriteContainer(
+                    apiResult,
+                    this.sideBarContainer,
+                    this.imageContainer,
+                    this.imageView,
+                    this.titleBar,
+                    this.favoriteButton,
+                    this.downloadButton
+            );
+            this.sideBarContainer.getChildren().add(stackPane);
+            System.out.println("Added [" + this.apiCoordinator.currentIndex() + "] as a favorite ");
+        }
+
+        this.favoriteButton.setText(getFavoriteButtonText(imageUrl));
+        this.titleBar.setDisable(!this.favoritesManager.isFavorite(imageUrl));
+    }
+
+    /**
+     * Loads the previous image in the view.
+     * @param ignoredEvent The event arguments.
+     */
+    @FXML
+    public void moveToPreviousImage(@NotNull ActionEvent ignoredEvent) {
+        System.out.println("Moving to previous image: [" + (this.apiCoordinator.currentIndex() - 1) + "]");
+
+        toggleAllButtons(false, true, true);
+        var apiResult = this.apiCoordinator.getPreviousImage();
+
+        Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
+        this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl()));
+
+        Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
+        Utilities.deselectFavoriteButton(this.sideBarContainer);
+    }
+
+    /**
+     * Loads the next image in the view.
+     * @param ignoredEvent The event arguments.
+     */
+    @FXML
+    public void moveToNextImage(@NotNull ActionEvent ignoredEvent) {
+        System.out.println("Moving to next image: [" + (this.apiCoordinator.currentIndex() + 1) + "]");
+        loadNextImage();
+    }
+
+    /**
+     * Saves the current image to the file system.
+     * @param ignoredEvent The event arguments.
+     */
+    @FXML
+    public void downloadImage(@NotNull ActionEvent ignoredEvent) {
+        System.out.println("Saving image from " + imageView.getImage().getUrl());
+    }
+
+    /**
+     * Updates the title bar with a user-provided name.
+     * @param ignoredEvent The event arguments.
+     */
+    @FXML
+    public void updateFavoriteName(@NotNull KeyEvent ignoredEvent) {
+        // Yes, there is no event for when the text field is selected or deselected, so
+        // this will result in the settings file being serialized for every key stroke.
+        // Too bad!
+        var apiResult = new ApiResult(titleBar.getText(), imageView.getImage());
+        this.favoritesManager.updateFavorite(imageView.getImage().getUrl(), apiResult);
+    }
+
+    /**
      * Populates the sidebar with buttons for the favorites saved in the settings file.
      */
     private void populateFavoriteButtons() {
@@ -127,119 +217,33 @@ public class MainController {
     }
 
     /**
-     * Adds the current image as a favorite.
-     * @param ignoredEvent The event arguments.
-     */
-    @FXML
-    public void handleFavoriteButton(@NotNull ActionEvent ignoredEvent) {
-        var imageUrl = this.imageView.getImage().getUrl();
-
-        if (this.favoritesManager.isFavorite(imageUrl)) {
-            // Remove favorite button
-            this.sideBarContainer.getChildren()
-                    .stream()
-                    .filter(node -> node instanceof StackPane)
-                    .map(node -> (StackPane)node)
-                    .filter(stackPane -> stackPane.getChildren().stream().anyMatch(node -> node instanceof ImageView image && image.getImage().getUrl().equals(imageUrl)))
-                    .findFirst()
-                    .ifPresent(stackPane -> this.sideBarContainer.getChildren().remove(stackPane));
-
-            this.favoritesManager.removeFavorite(imageUrl);
-        } else {
-            // Add favorite button
-            var apiResult = new ApiResult(this.titleBar.getText(), this.imageView.getImage());
-            this.favoritesManager.addFavorite(apiResult);
-
-            var stackPane = this.favoritesManager.createFavoriteContainer(
-                    apiResult,
-                    this.sideBarContainer,
-                    this.imageContainer,
-                    this.imageView,
-                    this.titleBar,
-                    this.favoriteButton,
-                    this.downloadButton
-            );
-            this.sideBarContainer.getChildren().add(stackPane);
-        }
-
-        this.favoriteButton.setText(getFavoriteButtonText(imageUrl));
-        this.titleBar.setDisable(!this.favoritesManager.isFavorite(imageUrl));
-    }
-
-    /**
-     * Loads the previous image in the view.
-     * @param ignoredEvent The event arguments.
-     */
-    @FXML
-    public void moveToPreviousImage(@NotNull ActionEvent ignoredEvent) {
-        System.out.println("moveToPreviousImage press!");
-
-        toggleAllButtons(false, true);
-        var apiResult = this.apiCoordinator.getPreviousImage();
-
-
-        setTitleBarText(apiResult);
-        this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl()));
-        Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
-        Utilities.deselectFavoriteButton(this.sideBarContainer);
-    }
-
-    /**
-     * Loads the next image in the view.
-     * @param ignoredEvent The event arguments.
-     */
-    @FXML
-    public void moveToNextImage(@NotNull ActionEvent ignoredEvent) {
-        System.out.println("moveToNextImage press!");
-        loadNextImage();
-    }
-
-    /**
-     * Saves the current image to the file system.
-     * @param ignoredEvent The event arguments.
-     */
-    @FXML
-    public void downloadImage(@NotNull ActionEvent ignoredEvent) {
-        System.out.println("downloadImage press!");
-    }
-
-    @FXML
-    public void updateFavoriteName(@NotNull KeyEvent ignoredEvent) {
-        // Yes, there is no event for when the text field is selected or deselected, so
-        // this will result in the settings file being serialized for every key stroke.
-        // Too bad!
-        var apiResult = new ApiResult(titleBar.getText(), imageView.getImage());
-        this.favoritesManager.updateFavorite(imageView.getImage().getUrl(), apiResult);
-    }
-
-    /**
      * Prepares the view for an image change and loads the next image.
      */
     private void loadNextImage() {
         isLoading = true;
         this.imageView.setImage(Statics.LOADING_IMAGE);
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
-        this.titleBar.setText("...");
         this.titleBar.setDisable(true);
-        toggleAllButtons(true, false);
+        this.titleBar.setText("...");
+        toggleAllButtons(true, false, true);
         Utilities.deselectFavoriteButton(this.sideBarContainer);
 
         this.apiCoordinator.getNextImageAsync()
                 .handle((apiResult, ex) -> {
                     if (ex == null) {
-                        setTitleBarText(apiResult);
+                        Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
                         Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
-                        toggleAllButtons(false, true);
+                        toggleAllButtons(false, true, false);
 
                         // The text for buttons can only be set by a JavaFX thread
                         Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
                     } else {
                         var errorCause = ex.fillInStackTrace().getCause();
                         var errorReason = (errorCause.getMessage() == null)
-                                ? "Operation has timed out"
+                                ? "ERROR: Operation has timed out"
                                 : errorCause.getMessage();
 
-                        System.out.println(errorReason);
+                        System.out.println("\u001B[31m" + errorReason + "\u001B[0m");
                         this.titleBar.setText("Request has failed: " + errorReason);
                         this.titleBar.setDisable(true);
                         this.nextButton.setDisable(false);
@@ -262,16 +266,17 @@ public class MainController {
      * Toggles all buttons in the view to the specified value.
      * @param disable Whether the buttons should be disabled or not.
      * @param protectPreviousButton Whether the "Previous" button should be toggled so it can be safely used.
+     * @param isBefore Whether this method was called before the image got loaded into the view.
      */
-    private void toggleAllButtons(boolean disable, boolean protectPreviousButton) {
+    private void toggleAllButtons(boolean disable, boolean protectPreviousButton, boolean isBefore) {
         this.favoriteButton.setDisable(disable);
         this.previousButton.setDisable(disable);
         this.downloadButton.setDisable(disable);
         this.nextButton.setDisable(disable);
 
-        if (protectPreviousButton && !disable && apiCoordinator.currentIndex() > 1) {
+        if (protectPreviousButton && !disable && this.apiCoordinator.currentIndex() > 1) {
             this.previousButton.setDisable(false);
-        } else if (protectPreviousButton && apiCoordinator.currentIndex() < 1) {
+        } else if (protectPreviousButton && (isBefore && this.apiCoordinator.currentIndex() <= 1) || this.apiCoordinator.currentIndex() < 1) {
             this.previousButton.setDisable(true);
         }
     }
@@ -285,16 +290,5 @@ public class MainController {
         return (this.favoritesManager.isFavorite(imageUrl))
                 ? Statics.FAVORITE_BUTTON_TEXT
                 : Statics.NOT_FAVORITE_BUTTON_TEXT;
-    }
-
-    private void setTitleBarText(@NotNull ApiResult apiResult) {
-        var imageUrl = apiResult.apiImage().getUrl();
-        var isFavorite = this.favoritesManager.isFavorite(imageUrl);
-        this.titleBar.setDisable(!isFavorite);
-        this.titleBar.setText(
-                (isFavorite)
-                        ? this.favoritesManager.getCachedFavorite(imageUrl).serviceName()
-                        : apiResult.serviceName()
-        );
     }
 }
