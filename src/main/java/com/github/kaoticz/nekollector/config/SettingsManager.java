@@ -1,6 +1,5 @@
 package com.github.kaoticz.nekollector.config;
 
-import com.github.kaoticz.nekollector.MainApplication;
 import com.github.kaoticz.nekollector.common.Statics;
 import org.jetbrains.annotations.NotNull;
 import java.io.File;
@@ -20,8 +19,7 @@ public class SettingsManager {
      * Initializes an object that handles the configuration file used by the application.
      */
     public SettingsManager() {
-        var settingsDirUri = MainApplication.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-        settingsDirUri = settingsDirUri.substring(0, settingsDirUri.lastIndexOf(File.separatorChar, settingsDirUri.length() - 2)) + File.separatorChar + "data";
+        var settingsDirUri = System.getProperty("user.dir") + File.separatorChar + "data";
         var settingsDirPath = Path.of(settingsDirUri);
         this.settingsPath = Path.of(settingsDirUri + File.separatorChar + "settings.json");
 

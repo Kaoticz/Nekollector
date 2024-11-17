@@ -231,6 +231,7 @@ public class MainController {
                         Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
                         Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
                         toggleAllButtons(false, true, false);
+                        Utilities.deselectFavoriteButton(this.sideBarContainer);
 
                         // The text for buttons can only be set by a JavaFX thread
                         Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
@@ -253,8 +254,6 @@ public class MainController {
 
                         // TODO: set error image here
                     }
-
-                    Utilities.deselectFavoriteButton(this.sideBarContainer);
 
                     return apiResult;
                 });
