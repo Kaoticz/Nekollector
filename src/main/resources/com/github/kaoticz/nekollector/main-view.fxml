@@ -64,16 +64,19 @@
 
   <!-- Favorite Button -->
   <Button fx:id="favoriteButton"
-          text="☆ Favorite"
+          text="☆"
           GridPane.columnIndex="2"
           GridPane.rowIndex="2"
           GridPane.halignment="CENTER"
           GridPane.valignment="CENTER"
-          styleClass="support-btn"
+          styleClass="star-btn"
           onAction="#handleFavoriteButton">
     <GridPane.margin>
-      <Insets top="2" />
+      <Insets top="2" bottom="2" />
     </GridPane.margin>
+    <tooltip>
+      <Tooltip text="Favorite" styleClass="tooltip" />
+    </tooltip>
   </Button>
 
   <!-- Download Button -->
@@ -82,9 +85,13 @@
           GridPane.rowIndex="3"
           GridPane.halignment="CENTER"
           GridPane.valignment="CENTER"
-          text="⤓ Download"
-          styleClass="support-btn"
-          onAction="#downloadImage" />
+          text="⤓"
+          styleClass="download-btn"
+          onAction="#downloadImage">
+    <tooltip>
+      <Tooltip text="Download" styleClass="tooltip" />
+    </tooltip>
+  </Button>
 
   <!-- Previous Button -->
   <Button fx:id="previousButton"
@@ -95,7 +102,11 @@
           disable="true"
           text="❮"
           styleClass="nav-btn"
-          onAction="#moveToPreviousImage" />
+          onAction="#moveToPreviousImage">
+    <tooltip>
+      <Tooltip text="Previous Image" styleClass="tooltip" />
+    </tooltip>
+  </Button>
 
   <!-- Next Button -->
   <Button fx:id="nextButton"
@@ -105,6 +116,10 @@
           GridPane.valignment="CENTER"
           text="❯"
           styleClass="nav-btn"
-          onAction="#moveToNextImage" />
+          onAction="#moveToNextImage">
+    <tooltip>
+      <Tooltip text="Next Image" styleClass="tooltip" />
+    </tooltip>
+  </Button>
 
 </GridPane>

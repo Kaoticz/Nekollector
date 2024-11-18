@@ -17,9 +17,9 @@ import java.util.Objects;
  * Contains global objects relevant to the application.
  */
 public class Statics {
-    public static final String FAVORITE_BUTTON_TEXT = "\uD83D\uDFCA Favorite";
+    public static final String FAVORITE_BUTTON_TEXT = "\uD83D\uDFCA";
 
-    public static final String NOT_FAVORITE_BUTTON_TEXT = "☆ Favorite";
+    public static final String NOT_FAVORITE_BUTTON_TEXT = "☆";
     /**
      * The loading gif shown before the requested image.
      */

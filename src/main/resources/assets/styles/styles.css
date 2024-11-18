@@ -1,27 +1,46 @@
 .nav-btn {
-    -fx-background-color: E7E6E7;
-    -fx-font-size: 22px;
+    -fx-background-color: #E7E6E7;
+    -fx-font-size: 28px;
     -fx-cursor: hand;
 }
 
 .nav-btn:pressed {
-    -fx-background-color: C6C5C6;
+    -fx-background-color: #C6C5C6;
 }
 
-.support-btn {
-    -fx-background-color: E7E6E7;
-    -fx-font-size: 15px;
+.star-btn {
+    -fx-background-color: #E7E6E7;
+    -fx-text-fill: #E8C547;
     -fx-cursor: hand;
+    -fx-font-size: 44px;
+    -fx-padding: -2px 13px -2px 13px;
 }
 
-.support-btn:pressed {
-    -fx-background-color: C6C5C6;
+.star-btn:pressed {
+    -fx-background-color: #C6C5C6;
+}
+
+.download-btn {
+    -fx-background-color: #E7E6E7;
+    -fx-cursor: hand;
+    -fx-font-size: 34px;
+    -fx-padding: 4px 16px 4px 16px;               /* top right bottom left*/
+}
+
+.download-btn:pressed {
+    -fx-background-color: #C6C5C6;
+}
+
+.tooltip {
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-background-color: #F0EFF0;
 }
 
 .primary-bg {
-    -fx-background-color: FAF5F8;
+    -fx-background-color: #FAF5F8;
 }
 
 .secondary-bg {
-    -fx-background-color: FCFAFC;
+    -fx-background-color: #FCFAFC;
 }
