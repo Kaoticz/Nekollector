@@ -18,7 +18,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -61,16 +60,15 @@ public class MainController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            var window = this.imageView.getScene().getWindow();
-
-            window.widthProperty().addListener((_, _, _) -> {
+            this.imageContainer.widthProperty().addListener((_, _, newValue) -> {
                 if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
-                    this.imageView.setFitWidth(this.imageContainer.getWidth() - 10);
+                    this.imageView.setFitWidth(newValue.doubleValue() - 10);
                 }
             });
-            window.heightProperty().addListener((_, _, _) -> {
+
+            this.imageContainer.heightProperty().addListener((_, _, newValue) -> {
                 if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
-                    this.imageView.setFitHeight(this.imageContainer.getHeight() - 10);
+                    this.imageView.setFitHeight(newValue.doubleValue() - 10);
                 }
             });
 
@@ -283,7 +281,7 @@ public class MainController {
      * @param imageUrl The URL to the currently set image.
      * @return The string to display on the favorite button.
      */
-    private String getFavoriteButtonText(String imageUrl) {
+    private @NotNull String getFavoriteButtonText(String imageUrl) {
         return (this.favoritesManager.isFavorite(imageUrl))
                 ? Statics.FAVORITE_BUTTON_TEXT
                 : Statics.NOT_FAVORITE_BUTTON_TEXT;

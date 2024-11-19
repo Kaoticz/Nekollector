@@ -1,6 +1,6 @@
 .nav-btn {
     -fx-background-color: #E7E6E7;
-    -fx-font-size: 28px;
+    -fx-font-size: 24px;
     -fx-cursor: hand;
 }
 
@@ -13,18 +13,19 @@
     -fx-text-fill: #E8C547;
     -fx-cursor: hand;
     -fx-font-size: 44px;
-    -fx-padding: -2px 13px -2px 13px;
+    -fx-padding: -5px 8px -8px 8px;
 }
 
 .star-btn:pressed {
     -fx-background-color: #C6C5C6;
+    -fx-font-weight: bold;
 }
 
 .download-btn {
     -fx-background-color: #E7E6E7;
     -fx-cursor: hand;
-    -fx-font-size: 34px;
-    -fx-padding: 4px 16px 4px 16px;               /* top right bottom left*/
+    -fx-font-size: 30px;
+    -fx-padding: 2px 13px 2px 13px;               /* top right bottom left*/
 }
 
 .download-btn:pressed {
