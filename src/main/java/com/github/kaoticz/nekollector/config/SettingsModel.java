@@ -2,6 +2,7 @@ package com.github.kaoticz.nekollector.config;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  */
 public class SettingsModel {
     private String nasaKey = "DEMO_KEY";
-    private String unsplashKey;
+    private String unsplashKey = "";
     private HashMap<String, String> favorites = new HashMap<>();
 
     /**
@@ -18,7 +19,7 @@ public class SettingsModel {
      * @return The API key.
      */
     @JsonGetter("nasa_key")
-    public String getNasaKey() {
+    public @NotNull String getNasaKey() {
         return nasaKey;
     }
 
@@ -36,7 +37,7 @@ public class SettingsModel {
      * @return The API key.
      */
     @JsonGetter("unsplash_key")
-    public String getUnsplashKey() {
+    public @NotNull String getUnsplashKey() {
         return unsplashKey;
     }
 
@@ -54,7 +55,7 @@ public class SettingsModel {
      * @return Key-pair values of the image URL and their name.
      */
     @JsonGetter("favorites")
-    public Map<String, String> getFavorites() {
+    public @NotNull Map<String, String> getFavorites() {
         return favorites;
     }
 

@@ -224,36 +224,35 @@ public class MainController {
         Utilities.deselectFavoriteButton(this.sideBarContainer);
 
         this.apiCoordinator.getNextImageAsync()
-                .handle((apiResult, ex) -> {
-                    if (ex == null) {
-                        Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
-                        Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
-                        toggleAllButtons(false, true, false);
-                        Utilities.deselectFavoriteButton(this.sideBarContainer);
+                .thenAccept(apiResult -> {
+                    Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
+                    Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
+                    toggleAllButtons(false, true, false);
+                    Utilities.deselectFavoriteButton(this.sideBarContainer);
 
-                        // The text for buttons can only be set by a JavaFX thread
-                        Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
-                    } else {
-                        var errorCause = ex.fillInStackTrace().getCause();
-                        var errorReason = "ERROR: " + (
-                                (errorCause.getMessage() == null)
+                    // The text for buttons can only be set by a JavaFX thread
+                    Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
+                })
+                .exceptionally(ex -> {
+                    var errorCause = ex.fillInStackTrace().getCause();
+                    var errorReason = "ERROR: " + (
+                            (errorCause.getMessage() == null)
                                     ? "Operation has timed out"
                                     : errorCause.getMessage()
-                        );
+                    );
 
-                        System.out.println("\u001B[31m" + errorReason + "\u001B[0m");
-                        this.titleBar.setText("Request has failed: " + errorReason);
-                        this.titleBar.setDisable(true);
-                        this.nextButton.setDisable(false);
+                    System.out.println("\u001B[31m" + errorReason + "\u001B[0m");
+                    this.titleBar.setText("Request has failed: " + errorReason);
+                    this.titleBar.setDisable(true);
+                    this.nextButton.setDisable(false);
 
-                        if (this.apiCoordinator.currentIndex() >= 1) {
-                            this.previousButton.setDisable(false);
-                        }
-
-                        // TODO: set error image here
+                    if (this.apiCoordinator.currentIndex() >= 1) {
+                        this.previousButton.setDisable(false);
                     }
 
-                    return apiResult;
+                    // TODO: set error image here
+
+                    return null;
                 });
     }
 

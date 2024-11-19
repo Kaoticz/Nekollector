@@ -34,7 +34,7 @@ public class Utilities {
      * @param sideBarContainer The sidebar container.
      * @return A stream of all favorite buttons.
      */
-    public static Stream<Button> getFavoriteButtons(@NotNull VBox sideBarContainer) {
+    public static @NotNull Stream<Button> getFavoriteButtons(@NotNull VBox sideBarContainer) {
         return sideBarContainer.getChildren()
                 .stream()
                 .filter(node -> node instanceof Pane)

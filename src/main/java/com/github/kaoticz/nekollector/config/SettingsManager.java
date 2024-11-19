@@ -46,7 +46,7 @@ public class SettingsManager {
      * Gets the settings used by the application.
      * @return The settings.
      */
-    public SettingsModel getSettings() {
+    public @NotNull SettingsModel getSettings() {
         return settings;
     }
 

@@ -46,7 +46,7 @@ public class FavoritesManager {
      * @param imageUrl The URL to the image.
      * @return The cached favorite.
      */
-    public ApiResult getCachedFavorite(@NotNull String imageUrl) {
+    public @NotNull ApiResult getCachedFavorite(@NotNull String imageUrl) {
         return Objects.requireNonNull(this.favoritesCache.get(imageUrl));
     }
 
@@ -122,7 +122,7 @@ public class FavoritesManager {
      * @param titleBar The title bar of the application.
      * @return The favorite view entry.
      */
-    public StackPane createFavoriteContainer(
+    public @NotNull StackPane createFavoriteContainer(
             @NotNull ApiResult apiResult,
             @NotNull VBox sideBarContainer,
             @NotNull StackPane mainImageContainer,

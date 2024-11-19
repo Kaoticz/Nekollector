@@ -47,7 +47,7 @@ public class ApiCoordinator {
      * @return The previous image.
      * @throws IllegalStateException Occurs when the current index is at the beginning of the list.
      */
-    public ApiResult getPreviousImage() throws IllegalStateException {
+    public @NotNull ApiResult getPreviousImage() throws IllegalStateException {
         if (this.currentIndex <= 0) {
             throw new IllegalStateException("Cannot get previous image as the current index is at the beginning of the list.");
         }
@@ -59,7 +59,7 @@ public class ApiCoordinator {
      * Gets the next image in the list. If there are none, it requests one and adds it to the list.
      * @return A future with the next image.
      */
-    public CompletableFuture<ApiResult> getNextImageAsync() {
+    public @NotNull CompletableFuture<ApiResult> getNextImageAsync() {
         if (this.currentIndex < this.cachedResults.size() - 1) {
             return CompletableFuture.completedFuture(this.cachedResults.get(++this.currentIndex));
         }
