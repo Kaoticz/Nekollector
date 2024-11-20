@@ -25,6 +25,7 @@ public class Statics {
      */
     public static final Image LOADING_IMAGE = new Image(Objects.requireNonNull(Statics.class.getResourceAsStream("/assets/images/loading.gif")));
 
+    public static final Image ERROR_IMAGE = new Image(Statics.class.getResource("/assets/images/erro.png").toExternalForm());
     /**
      * The program's HTTP client.
      */
