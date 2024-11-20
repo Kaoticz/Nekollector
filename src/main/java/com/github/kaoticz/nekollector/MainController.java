@@ -17,7 +17,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
+
+import javax.imageio.ImageIO;
+import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -60,6 +64,8 @@ public class MainController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
+            this.downloadButton.setDisable(true);
+
             this.imageContainer.widthProperty().addListener((_, _, newValue) -> {
                 if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
                     this.imageView.setFitWidth(newValue.doubleValue() - 10);
@@ -151,7 +157,29 @@ public class MainController {
      */
     @FXML
     public void downloadImage(@NotNull ActionEvent ignoredEvent) {
-        System.out.println("Saving image from " + imageView.getImage().getUrl());
+        // Verifique se há uma imagem válida antes de prosseguir
+        if (this.imageView.getImage() == null || this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
+            System.out.println("Nenhuma imagem disponível para download.");
+            return;
+        }
+
+        // Use FileChooser para permitir que o usuário escolha onde salvar a imagem
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Salvar Imagem");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagens", "*.png", "*.jpg", "*.jpeg"));
+
+        // Obtenha a imagem atual e prepare para salvar
+        var file = fileChooser.showSaveDialog(this.imageView.getScene().getWindow());
+        if (file != null) {
+            try (var outputStream = new FileOutputStream(file)) {
+                var bufferedImage = Utilities.convertToBufferedImage(this.imageView.getImage());
+                var formatName = file.getName().endsWith(".png") ? "png" : "jpg"; // Suporte para PNG e JPG
+                ImageIO.write(bufferedImage, formatName, outputStream);
+                System.out.println("Imagem salva em: " + file.getAbsolutePath());
+            } catch (Exception e) {
+                System.err.println("Erro ao salvar a imagem: " + e.getMessage());
+            }
+        }
     }
 
     /**
@@ -216,6 +244,8 @@ public class MainController {
      * Prepares the view for an image change and loads the next image.
      */
     private void loadNextImage() {
+        Platform.runLater(() -> this.downloadButton.setDisable(true));
+
         this.imageView.setImage(Statics.LOADING_IMAGE);
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
         this.titleBar.setDisable(true);
@@ -229,6 +259,8 @@ public class MainController {
                     Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
                     toggleAllButtons(false, true, false);
                     Utilities.deselectFavoriteButton(this.sideBarContainer);
+
+                    Platform.runLater(() -> this.downloadButton.setDisable(false));
 
                     // The text for buttons can only be set by a JavaFX thread
                     Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));

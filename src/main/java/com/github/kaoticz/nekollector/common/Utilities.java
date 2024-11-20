@@ -4,13 +4,13 @@ import com.github.kaoticz.nekollector.api.models.ApiResult;
 import com.github.kaoticz.nekollector.services.FavoritesManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
-
+import javafx.embed.swing.SwingFXUtils;
+import java.awt.image.BufferedImage;
 import java.util.stream.Stream;
 
 /**
@@ -87,4 +87,24 @@ public class Utilities {
                         : apiResult.serviceName()
         );
     }
+
+    public static BufferedImage convertToBufferedImage(Image image) {
+        if (image == null) {
+            throw new IllegalArgumentException("A imagem não pode ser nula.");
+        }
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        WritableImage writableImage = new WritableImage(width, height);
+        PixelReader reader = image.getPixelReader();
+        PixelWriter writer = writableImage.getPixelWriter();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                writer.setArgb(x, y, reader.getArgb(x, y));
+            }
+        }
+        SwingFXUtils.fromFXImage(writableImage, bufferedImage);
+        return bufferedImage;
+    }
+
 }
