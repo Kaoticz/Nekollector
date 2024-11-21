@@ -64,16 +64,14 @@ public class MainController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
-            this.downloadButton.setDisable(true);
-
             this.imageContainer.widthProperty().addListener((_, _, newValue) -> {
-                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
+                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE) && !this.imageView.getImage().equals(Statics.ERROR_IMAGE)) {
                     this.imageView.setFitWidth(newValue.doubleValue() - 10);
                 }
             });
 
             this.imageContainer.heightProperty().addListener((_, _, newValue) -> {
-                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
+                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE) && !this.imageView.getImage().equals(Statics.ERROR_IMAGE)) {
                     this.imageView.setFitHeight(newValue.doubleValue() - 10);
                 }
             });
@@ -137,7 +135,7 @@ public class MainController {
         Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
         this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl()));
 
-        Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
+        Utilities.resizeImageToContainer(this.imageContainer, this.imageView, apiResult.apiImage());
         Utilities.deselectFavoriteButton(this.sideBarContainer);
     }
 
@@ -163,6 +161,9 @@ public class MainController {
             return;
         }
 
+        // Assign the image locally to avoid concurrency issues
+        var imageToSave = this.imageView.getImage();
+
         // Get the file extension
         var extensionStartIndex = this.imageView.getImage().getUrl().lastIndexOf('.') + 1;
         var fileExtension = this.imageView.getImage().getUrl().substring(extensionStartIndex);
@@ -181,7 +182,7 @@ public class MainController {
         var file = fileChooser.showSaveDialog(this.imageView.getScene().getWindow());
         if (file != null) {
             try (var outputStream = new FileOutputStream(file)) {
-                var bufferedImage = Utilities.convertToBufferedImage(this.imageView.getImage());
+                var bufferedImage = Utilities.convertToBufferedImage(imageToSave);
                 if (ImageIO.write(bufferedImage, fileExtension, outputStream)) {
                     System.out.println("Image saved to: " + file.getAbsolutePath());
                 } else {
@@ -255,8 +256,6 @@ public class MainController {
      * Prepares the view for an image change and loads the next image.
      */
     private void loadNextImage() {
-        Platform.runLater(() -> this.downloadButton.setDisable(true));
-
         this.imageView.setImage(Statics.LOADING_IMAGE);
         this.imageView.setFitHeight(Statics.LOADING_IMAGE.getHeight());
         this.titleBar.setDisable(true);
@@ -267,11 +266,9 @@ public class MainController {
         this.apiCoordinator.getNextImageAsync()
                 .thenAccept(apiResult -> {
                     Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
-                    Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
+                    Utilities.resizeImageToContainer(this.imageContainer, this.imageView, apiResult.apiImage());
                     toggleAllButtons(false, true, false);
                     Utilities.deselectFavoriteButton(this.sideBarContainer);
-
-                    Platform.runLater(() -> this.downloadButton.setDisable(false));
 
                     // The text for buttons can only be set by a JavaFX thread
                     Platform.runLater(() -> this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl())));
@@ -287,13 +284,17 @@ public class MainController {
                     System.out.println(Utilities.createErrorString(errorReason));
                     this.titleBar.setText("Request has failed: " + errorReason);
                     this.titleBar.setDisable(true);
+                    toggleAllButtons(true, false, false);
                     this.nextButton.setDisable(false);
 
                     if (this.apiCoordinator.currentIndex() >= 1) {
                         this.previousButton.setDisable(false);
                     }
 
-                    // TODO: set error image here
+                    // Set the error image
+                    this.imageView.setImage(Statics.ERROR_IMAGE);
+                    imageView.setFitWidth(Statics.ERROR_IMAGE.getWidth() / 2);
+                    imageView.setFitHeight(Statics.ERROR_IMAGE.getHeight() / 2);
 
                     return null;
                 });

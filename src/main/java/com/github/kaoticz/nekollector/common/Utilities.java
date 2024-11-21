@@ -23,7 +23,7 @@ public class Utilities {
      * @param imageView The image view of the image to be resized.
      * @param image The image to be resized.
      */
-    public static void resizeImage(@NotNull Pane imageContainer, @NotNull ImageView imageView, @NotNull Image image) {
+    public static void resizeImageToContainer(@NotNull Pane imageContainer, @NotNull ImageView imageView, @NotNull Image image) {
         imageView.setImage(image);
         imageView.setFitWidth(imageContainer.getWidth());
         imageView.setFitHeight(imageContainer.getHeight());
