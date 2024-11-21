@@ -17,7 +17,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
+
+import javax.imageio.ImageIO;
+import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -61,13 +65,13 @@ public class MainController {
     public void initialize() {
         Platform.runLater(() -> {
             this.imageContainer.widthProperty().addListener((_, _, newValue) -> {
-                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
+                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE) && !this.imageView.getImage().equals(Statics.ERROR_IMAGE)) {
                     this.imageView.setFitWidth(newValue.doubleValue() - 10);
                 }
             });
 
             this.imageContainer.heightProperty().addListener((_, _, newValue) -> {
-                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
+                if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE) && !this.imageView.getImage().equals(Statics.ERROR_IMAGE)) {
                     this.imageView.setFitHeight(newValue.doubleValue() - 10);
                 }
             });
@@ -131,7 +135,7 @@ public class MainController {
         Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
         this.favoriteButton.setText(getFavoriteButtonText(apiResult.apiImage().getUrl()));
 
-        Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
+        Utilities.resizeImageToContainer(this.imageContainer, this.imageView, apiResult.apiImage());
         Utilities.deselectFavoriteButton(this.sideBarContainer);
     }
 
@@ -151,7 +155,43 @@ public class MainController {
      */
     @FXML
     public void downloadImage(@NotNull ActionEvent ignoredEvent) {
-        System.out.println("Saving image from " + imageView.getImage().getUrl());
+        // Verifique se há uma imagem válida antes de prosseguir
+        if (this.imageView.getImage() == null || this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
+            System.out.println("Nenhuma imagem disponível para download.");
+            return;
+        }
+
+        // Assign the image locally to avoid concurrency issues
+        var imageToSave = this.imageView.getImage();
+
+        // Get the file extension
+        var extensionStartIndex = this.imageView.getImage().getUrl().lastIndexOf('.') + 1;
+        var fileExtension = this.imageView.getImage().getUrl().substring(extensionStartIndex);
+
+        // OpenJDK does not provide a jpg encoder for ImageIO, so save the image as png instead
+        if (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg")) {
+            fileExtension = "png";
+        }
+
+        // Use FileChooser para permitir que o usuário escolha onde salvar a imagem
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save image to...");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Image (." + fileExtension + ")", "*." + fileExtension));
+
+        // Obtenha a imagem atual e prepare para salvar
+        var file = fileChooser.showSaveDialog(this.imageView.getScene().getWindow());
+        if (file != null) {
+            try (var outputStream = new FileOutputStream(file)) {
+                var bufferedImage = Utilities.convertToBufferedImage(imageToSave);
+                if (ImageIO.write(bufferedImage, fileExtension, outputStream)) {
+                    System.out.println("Image saved to: " + file.getAbsolutePath());
+                } else {
+                    System.out.println(Utilities.createErrorString("ERROR: Failed to encode the image as " + fileExtension));
+                }
+            } catch (Exception e) {
+                System.err.println(Utilities.createErrorString("ERROR: Failed to save image to: " + e.getMessage()));
+            }
+        }
     }
 
     /**
@@ -226,7 +266,7 @@ public class MainController {
         this.apiCoordinator.getNextImageAsync()
                 .thenAccept(apiResult -> {
                     Utilities.setTitleBarText(apiResult, this.favoritesManager, this.titleBar);
-                    Utilities.resizeImage(this.imageContainer, this.imageView, apiResult.apiImage());
+                    Utilities.resizeImageToContainer(this.imageContainer, this.imageView, apiResult.apiImage());
                     toggleAllButtons(false, true, false);
                     Utilities.deselectFavoriteButton(this.sideBarContainer);
 
@@ -241,16 +281,20 @@ public class MainController {
                                     : errorCause.getMessage()
                     );
 
-                    System.out.println("\u001B[31m" + errorReason + "\u001B[0m");
+                    System.out.println(Utilities.createErrorString(errorReason));
                     this.titleBar.setText("Request has failed: " + errorReason);
                     this.titleBar.setDisable(true);
+                    toggleAllButtons(true, false, false);
                     this.nextButton.setDisable(false);
 
                     if (this.apiCoordinator.currentIndex() >= 1) {
                         this.previousButton.setDisable(false);
                     }
 
-                    // TODO: set error image here
+                    // Set the error image
+                    this.imageView.setImage(Statics.ERROR_IMAGE);
+                    imageView.setFitWidth(Statics.ERROR_IMAGE.getWidth() / 2);
+                    imageView.setFitHeight(Statics.ERROR_IMAGE.getHeight() / 2);
 
                     return null;
                 });

@@ -4,13 +4,13 @@ import com.github.kaoticz.nekollector.api.models.ApiResult;
 import com.github.kaoticz.nekollector.services.FavoritesManager;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
+import javafx.scene.image.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import org.jetbrains.annotations.NotNull;
-
+import javafx.embed.swing.SwingFXUtils;
+import java.awt.image.BufferedImage;
 import java.util.stream.Stream;
 
 /**
@@ -23,7 +23,7 @@ public class Utilities {
      * @param imageView The image view of the image to be resized.
      * @param image The image to be resized.
      */
-    public static void resizeImage(@NotNull Pane imageContainer, @NotNull ImageView imageView, @NotNull Image image) {
+    public static void resizeImageToContainer(@NotNull Pane imageContainer, @NotNull ImageView imageView, @NotNull Image image) {
         imageView.setImage(image);
         imageView.setFitWidth(imageContainer.getWidth());
         imageView.setFitHeight(imageContainer.getHeight());
@@ -86,5 +86,38 @@ public class Utilities {
                         ? favoritesManager.getCachedFavorite(imageUrl).serviceName()
                         : apiResult.serviceName()
         );
+    }
+
+    /**
+     * Converts the provided image to a buffered image.
+     * @param image The image to convert.
+     * @return The buffered image.
+     */
+    public static BufferedImage convertToBufferedImage(Image image) {
+        if (image == null) {
+            throw new IllegalArgumentException("A imagem não pode ser nula.");
+        }
+        int width = (int) image.getWidth();
+        int height = (int) image.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        WritableImage writableImage = new WritableImage(width, height);
+        PixelReader reader = image.getPixelReader();
+        PixelWriter writer = writableImage.getPixelWriter();
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                writer.setArgb(x, y, reader.getArgb(x, y));
+            }
+        }
+        SwingFXUtils.fromFXImage(writableImage, bufferedImage);
+        return bufferedImage;
+    }
+
+    /**
+     * Creates a string that's rendered in red color on the console.
+     * @param message The message to be printed.
+     * @return The message to be printed in red.
+     */
+    public static String createErrorString(String message) {
+        return "\u001B[31m" + message + "\u001B[0m";
     }
 }

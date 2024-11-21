@@ -213,7 +213,7 @@ public class FavoritesManager {
             var favorite = getCachedFavorite(imageUrl);
             titleBar.setText(favorite.serviceName());
             titleBar.setDisable(!isFavorite(favorite.apiImage().getUrl()));
-            Utilities.resizeImage(mainImageContainer, mainImageView, favorite.apiImage());
+            Utilities.resizeImageToContainer(mainImageContainer, mainImageView, favorite.apiImage());
         });
     }
 }

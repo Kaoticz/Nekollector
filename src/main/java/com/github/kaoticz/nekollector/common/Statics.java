@@ -26,6 +26,11 @@ public class Statics {
     public static final Image LOADING_IMAGE = new Image(Objects.requireNonNull(Statics.class.getResourceAsStream("/assets/images/loading.gif")));
 
     /**
+     * The error image shown when loading fails.
+     */
+    public static final Image ERROR_IMAGE = new Image(Objects.requireNonNull(Statics.class.getResourceAsStream("/assets/images/error.png")));
+
+    /**
      * The program's HTTP client.
      */
     public static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
