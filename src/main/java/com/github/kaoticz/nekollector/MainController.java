@@ -21,6 +21,7 @@ import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
 
 import javax.imageio.ImageIO;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -177,6 +178,7 @@ public class MainController {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save image to...");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Image (." + fileExtension + ")", "*." + fileExtension));
+        fileChooser.setInitialDirectory(new File(this.settingsManager.getSettings().getDefaultDownloadDirectory()));
 
         // Obtenha a imagem atual e prepare para salvar
         var file = fileChooser.showSaveDialog(this.imageView.getScene().getWindow());
@@ -185,6 +187,11 @@ public class MainController {
                 var bufferedImage = Utilities.convertToBufferedImage(imageToSave);
                 if (ImageIO.write(bufferedImage, fileExtension, outputStream)) {
                     System.out.println("Image saved to: " + file.getAbsolutePath());
+                    var directoryUri = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(File.separatorChar) + 1);
+
+                    if (!directoryUri.equals(this.settingsManager.getSettings().getDefaultDownloadDirectory())) {
+                        this.settingsManager.saveSettings(settings -> settings.setDefaultDownloadDirectory(directoryUri));
+                    }
                 } else {
                     System.out.println(Utilities.createErrorString("ERROR: Failed to encode the image as " + fileExtension));
                 }

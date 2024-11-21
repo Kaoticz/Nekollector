@@ -93,22 +93,22 @@ public class Utilities {
      * @param image The image to convert.
      * @return The buffered image.
      */
-    public static BufferedImage convertToBufferedImage(Image image) {
-        if (image == null) {
-            throw new IllegalArgumentException("A imagem não pode ser nula.");
-        }
-        int width = (int) image.getWidth();
-        int height = (int) image.getHeight();
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        WritableImage writableImage = new WritableImage(width, height);
-        PixelReader reader = image.getPixelReader();
-        PixelWriter writer = writableImage.getPixelWriter();
+    public static @NotNull BufferedImage convertToBufferedImage(@NotNull Image image) {
+        var width = (int)image.getWidth();
+        var height = (int)image.getHeight();
+        var bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        var writableImage = new WritableImage(width, height);
+        var reader = image.getPixelReader();
+        var writer = writableImage.getPixelWriter();
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 writer.setArgb(x, y, reader.getArgb(x, y));
             }
         }
+
         SwingFXUtils.fromFXImage(writableImage, bufferedImage);
+
         return bufferedImage;
     }
 
@@ -117,7 +117,7 @@ public class Utilities {
      * @param message The message to be printed.
      * @return The message to be printed in red.
      */
-    public static String createErrorString(String message) {
+    public static @NotNull String createErrorString(@NotNull String message) {
         return "\u001B[31m" + message + "\u001B[0m";
     }
 }

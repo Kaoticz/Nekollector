@@ -40,6 +40,10 @@ public class SettingsManager {
         } catch (IOException e) {
             this.settings = new SettingsModel();
         }
+
+        if (this.settings.getDefaultDownloadDirectory() == null || this.settings.getDefaultDownloadDirectory().isBlank()) {
+            this.settings.setDefaultDownloadDirectory(settingsDirUri);
+        }
     }
 
     /**
