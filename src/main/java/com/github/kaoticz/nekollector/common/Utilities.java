@@ -88,6 +88,11 @@ public class Utilities {
         );
     }
 
+    /**
+     * Converts the provided image to a buffered image.
+     * @param image The image to convert.
+     * @return The buffered image.
+     */
     public static BufferedImage convertToBufferedImage(Image image) {
         if (image == null) {
             throw new IllegalArgumentException("A imagem não pode ser nula.");
@@ -107,4 +112,12 @@ public class Utilities {
         return bufferedImage;
     }
 
+    /**
+     * Creates a string that's rendered in red color on the console.
+     * @param message The message to be printed.
+     * @return The message to be printed in red.
+     */
+    public static String createErrorString(String message) {
+        return "\u001B[31m" + message + "\u001B[0m";
+    }
 }

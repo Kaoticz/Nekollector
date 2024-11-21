@@ -163,21 +163,32 @@ public class MainController {
             return;
         }
 
+        // Get the file extension
+        var extensionStartIndex = this.imageView.getImage().getUrl().lastIndexOf('.') + 1;
+        var fileExtension = this.imageView.getImage().getUrl().substring(extensionStartIndex);
+
+        // OpenJDK does not provide a jpg encoder for ImageIO, so save the image as png instead
+        if (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg")) {
+            fileExtension = "png";
+        }
+
         // Use FileChooser para permitir que o usuário escolha onde salvar a imagem
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Salvar Imagem");
-        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Imagens", "*.png", "*.jpg", "*.jpeg"));
+        fileChooser.setTitle("Save image to...");
+        fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Image (." + fileExtension + ")", "*." + fileExtension));
 
         // Obtenha a imagem atual e prepare para salvar
         var file = fileChooser.showSaveDialog(this.imageView.getScene().getWindow());
         if (file != null) {
             try (var outputStream = new FileOutputStream(file)) {
                 var bufferedImage = Utilities.convertToBufferedImage(this.imageView.getImage());
-                var formatName = file.getName().endsWith(".png") ? "png" : "jpg"; // Suporte para PNG e JPG
-                ImageIO.write(bufferedImage, formatName, outputStream);
-                System.out.println("Imagem salva em: " + file.getAbsolutePath());
+                if (ImageIO.write(bufferedImage, fileExtension, outputStream)) {
+                    System.out.println("Image saved to: " + file.getAbsolutePath());
+                } else {
+                    System.out.println(Utilities.createErrorString("ERROR: Failed to encode the image as " + fileExtension));
+                }
             } catch (Exception e) {
-                System.err.println("Erro ao salvar a imagem: " + e.getMessage());
+                System.err.println(Utilities.createErrorString("ERROR: Failed to save image to: " + e.getMessage()));
             }
         }
     }
@@ -273,7 +284,7 @@ public class MainController {
                                     : errorCause.getMessage()
                     );
 
-                    System.out.println("\u001B[31m" + errorReason + "\u001B[0m");
+                    System.out.println(Utilities.createErrorString(errorReason));
                     this.titleBar.setText("Request has failed: " + errorReason);
                     this.titleBar.setDisable(true);
                     this.nextButton.setDisable(false);
