@@ -174,30 +174,37 @@ public class MainController {
             fileExtension = "png";
         }
 
-        // Use FileChooser para permitir que o usuário escolha onde salvar a imagem
+        // Invoke the file picker
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save image to...");
         fileChooser.setSelectedExtensionFilter(new FileChooser.ExtensionFilter("Image (." + fileExtension + ")", "*." + fileExtension));
         fileChooser.setInitialDirectory(new File(this.settingsManager.getSettings().getDefaultDownloadDirectory()));
 
-        // Obtenha a imagem atual e prepare para salvar
+        // Get the file path chosen by the user
         var file = fileChooser.showSaveDialog(this.imageView.getScene().getWindow());
-        if (file != null) {
-            try (var outputStream = new FileOutputStream(file)) {
-                var bufferedImage = Utilities.convertToBufferedImage(imageToSave);
-                if (ImageIO.write(bufferedImage, fileExtension, outputStream)) {
-                    System.out.println("Image saved to: " + file.getAbsolutePath());
-                    var directoryUri = file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(File.separatorChar) + 1);
 
-                    if (!directoryUri.equals(this.settingsManager.getSettings().getDefaultDownloadDirectory())) {
-                        this.settingsManager.saveSettings(settings -> settings.setDefaultDownloadDirectory(directoryUri));
-                    }
-                } else {
-                    System.out.println(Utilities.createErrorString("ERROR: Failed to encode the image as " + fileExtension));
+        if (file == null) {
+            return;
+        }
+
+        var fileWithExtension = (file.getAbsolutePath().endsWith('.' + fileExtension))
+                ? file
+                : new File(file.getAbsolutePath() + "." + fileExtension);
+
+        try (var outputStream = new FileOutputStream(fileWithExtension)) {
+            var bufferedImage = Utilities.convertToBufferedImage(imageToSave);
+            if (ImageIO.write(bufferedImage, fileExtension, outputStream)) {
+                System.out.println("Image saved to: " + fileWithExtension.getAbsolutePath());
+                var directoryUri = fileWithExtension.getAbsolutePath().substring(0, fileWithExtension.getAbsolutePath().lastIndexOf(File.separatorChar) + 1);
+
+                if (!directoryUri.equals(this.settingsManager.getSettings().getDefaultDownloadDirectory())) {
+                    this.settingsManager.saveSettings(settings -> settings.setDefaultDownloadDirectory(directoryUri));
                 }
-            } catch (Exception e) {
-                System.err.println(Utilities.createErrorString("ERROR: Failed to save image to: " + e.getMessage()));
+            } else {
+                System.out.println(Utilities.createErrorString("ERROR: Failed to encode the image as " + fileExtension));
             }
+        } catch (Exception e) {
+            System.err.println(Utilities.createErrorString("ERROR: Failed to save image to: " + e.getMessage()));
         }
     }
 
@@ -292,6 +299,7 @@ public class MainController {
                     this.titleBar.setText("Request has failed: " + errorReason);
                     this.titleBar.setDisable(true);
                     toggleAllButtons(true, false, false);
+                    Utilities.deselectFavoriteButton(this.sideBarContainer);
                     this.nextButton.setDisable(false);
 
                     if (this.apiCoordinator.currentIndex() >= 1) {
