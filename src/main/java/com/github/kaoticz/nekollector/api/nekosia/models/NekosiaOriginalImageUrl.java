@@ -42,7 +42,7 @@ public class NekosiaOriginalImageUrl {
      * @param extension The file extension of the image.
      */
     @JsonSetter("extension")
-    public void setExtension(String extension) {
+    private void setExtension(String extension) {
         this.extension = extension;
     }
 }

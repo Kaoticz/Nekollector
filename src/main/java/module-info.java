@@ -10,6 +10,7 @@ module com.github.kaoticz.nekollector {
     requires java.desktop;
     requires javafx.swing;
 
+    opens com.github.kaoticz.nekollector.api.nekosbest.models to com.fasterxml.jackson.databind;
     opens com.github.kaoticz.nekollector.api.nekosia.models to com.fasterxml.jackson.databind;
     opens com.github.kaoticz.nekollector.config to com.fasterxml.jackson.databind;
     opens com.github.kaoticz.nekollector to javafx.fxml;

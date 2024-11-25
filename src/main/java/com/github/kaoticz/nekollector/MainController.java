@@ -1,6 +1,7 @@
 package com.github.kaoticz.nekollector;
 
 import com.github.kaoticz.nekollector.api.models.ApiResult;
+import com.github.kaoticz.nekollector.api.nekosbest.services.NekosBestService;
 import com.github.kaoticz.nekollector.api.nekosia.services.NekosiaService;
 import com.github.kaoticz.nekollector.common.Statics;
 import com.github.kaoticz.nekollector.common.Utilities;
@@ -32,6 +33,7 @@ public class MainController {
     private final FavoritesManager favoritesManager = new FavoritesManager(settingsManager);
 
     private final ApiCoordinator apiCoordinator = new ApiCoordinator(
+            new NekosBestService(),
             new NekosiaService()
     );
 
