@@ -66,7 +66,7 @@ public class ApiCoordinator {
 
         var randomApiService = apiServices.get(RANDOM.nextInt(apiServices.size()));
         return randomApiService.getImageAsync()
-                .orTimeout(17, TimeUnit.SECONDS)
+                .orTimeout(20, TimeUnit.SECONDS)
                 .thenApply(apiResult -> {
                     cachedResults.add(apiResult);
                     this.currentIndex++;
