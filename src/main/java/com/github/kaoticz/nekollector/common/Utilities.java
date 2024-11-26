@@ -120,4 +120,23 @@ public class Utilities {
     public static @NotNull String createErrorString(@NotNull String message) {
         return "\u001B[31m" + message + "\u001B[0m";
     }
+
+    /**
+     * Gets the file extension for a given file path.
+     * @param filePath The file path.
+     * @return The extension of the file or an empty string if there was none.
+     */
+    public static @NotNull String getExtension(String filePath) {
+        var extensionStartIndex = filePath.lastIndexOf('.');
+
+        if (extensionStartIndex++ == -1) {
+            return "";
+        }
+
+        var result = filePath.substring(extensionStartIndex);
+
+        return (result.contains("/") || result.contains("\\"))
+                ? ""
+                : result;
+    }
 }

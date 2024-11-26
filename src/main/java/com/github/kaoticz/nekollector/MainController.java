@@ -171,11 +171,10 @@ public class MainController {
         var imageToSave = this.imageView.getImage();
 
         // Get the file extension
-        var extensionStartIndex = this.imageView.getImage().getUrl().lastIndexOf('.') + 1;
-        var fileExtension = this.imageView.getImage().getUrl().substring(extensionStartIndex);
+        var fileExtension = Utilities.getExtension(this.imageView.getImage().getUrl());
 
         // OpenJDK does not provide a jpg encoder for ImageIO, so save the image as png instead
-        if (fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg")) {
+        if (fileExtension.isBlank() || fileExtension.equalsIgnoreCase("jpg") || fileExtension.equalsIgnoreCase("jpeg")) {
             fileExtension = "png";
         }
 
