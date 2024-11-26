@@ -23,7 +23,7 @@ public class NekosBestService implements ApiService {
     private final static String SERVICE_NAME = "nekos.best API";
 
     private final static HttpRequest REQUEST = HttpRequest.newBuilder()
-            .uri(URI.create("https://nekos.best/api/v2/neko?category=neko&amount=20"))
+            .uri(URI.create("https://nekos.best/api/v2/neko?category=neko&amount=50"))
             .timeout(Duration.ofSeconds(15))
             .GET()
             .build();

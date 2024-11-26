@@ -1,6 +1,5 @@
 package com.github.kaoticz.nekollector.api.nekosia.services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.github.kaoticz.nekollector.api.abstractions.ApiService;
 import com.github.kaoticz.nekollector.api.models.ApiResult;
 import com.github.kaoticz.nekollector.api.nekosia.models.NekosiaImage;
@@ -25,7 +24,7 @@ public class NekosiaService implements ApiService {
     private final static UUID USER_ID = UUID.randomUUID();
 
     private final static HttpRequest REQUEST = HttpRequest.newBuilder()
-            .uri(URI.create("https://api.nekosia.cat/api/v1/images/catgirl?session=id&id=" + USER_ID + "&count=20&rating=safe&blacklistedTags=swimwear,swimsuit,bikini,sea,swim-ring"))
+            .uri(URI.create("https://api.nekosia.cat/api/v1/images/catgirl?session=id&id=" + USER_ID + "&count=48&rating=safe&blacklistedTags=swimwear,swimsuit,bikini,sea,swim-ring"))
             .timeout(Duration.ofSeconds(15))
             .GET()
             .build();
@@ -55,7 +54,7 @@ public class NekosiaService implements ApiService {
                         var nekosiaResponse = Statics.JSON_DESERIALIZER.readValue(json, NekosiaResponse.class);
 
                         if (!nekosiaResponse.isSuccess()) {
-                            throw new IllegalStateException("Request to " + SERVICE_NAME + "has returned HTTP status " + nekosiaResponse.getHttpStatus());
+                            throw new IllegalStateException("Request to " + SERVICE_NAME + " has returned HTTP status " + nekosiaResponse.getHttpStatus());
                         }
 
                         cachedResults.addAll(Arrays.asList(nekosiaResponse.getImages()));

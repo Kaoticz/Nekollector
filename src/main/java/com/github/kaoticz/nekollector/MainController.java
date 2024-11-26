@@ -3,6 +3,7 @@ package com.github.kaoticz.nekollector;
 import com.github.kaoticz.nekollector.api.models.ApiResult;
 import com.github.kaoticz.nekollector.api.nekosbest.services.NekosBestService;
 import com.github.kaoticz.nekollector.api.nekosia.services.NekosiaService;
+import com.github.kaoticz.nekollector.api.nekosmoe.services.NekosMoeService;
 import com.github.kaoticz.nekollector.common.Statics;
 import com.github.kaoticz.nekollector.common.Utilities;
 import com.github.kaoticz.nekollector.config.SettingsManager;
@@ -20,13 +21,15 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import org.jetbrains.annotations.NotNull;
-
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * The controller for the main view.
+ */
 public class MainController {
     private final SettingsManager settingsManager = new SettingsManager();
 
@@ -34,6 +37,7 @@ public class MainController {
 
     private final ApiCoordinator apiCoordinator = new ApiCoordinator(
             new NekosBestService(),
+            new NekosMoeService(),
             new NekosiaService()
     );
 
