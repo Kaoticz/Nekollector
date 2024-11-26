@@ -126,7 +126,7 @@ public class Utilities {
      * @param filePath The file path.
      * @return The extension of the file or an empty string if there was none.
      */
-    public static @NotNull String getExtension(String filePath) {
+    public static @NotNull String getExtension(@NotNull String filePath) {
         var extensionStartIndex = filePath.lastIndexOf('.');
 
         if (extensionStartIndex++ == -1) {
