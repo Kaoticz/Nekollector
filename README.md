@@ -2,8 +2,6 @@
 
 Because who doesn’t love catgirls?
 
----
-
 ## What is Nekollector?
 
 **Nekollector** is a sleek JavaFX application that brings you an endless supply of adorable catgirl images, sourced from some of the most popular APIs out there:
@@ -30,8 +28,6 @@ Like what you see? Download it with a click to cherish it forever (or set as you
 
 Enjoy a responsive UI that doesn’t explode when you resize the window (unlike most Java apps).
 
----
-
 ## How to Get Started?
 
 1. Head over to the [Releases] section.
@@ -47,13 +43,9 @@ Enjoy a responsive UI that doesn’t explode when you resize the window (unlike 
 3. Compile it with Maven: `mvn clean javafx:jlink`
 4. The compiled binaries should be located in `target/Nekollector`
 
----
+## Demonstration
 
-## Screenshots
-
-Coming soon! Or better yet, just download the app and see for yourself.
-
----
+[Nekollector.webm](https://github.com/user-attachments/assets/c2d37f45-6343-4d95-aa0f-6826d5543581)
 
 ## License
 
@@ -66,7 +58,6 @@ This program is free software: you can redistribute it and/or modify it under th
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses/.
-
 
 
 [nekos.best]: https://nekos.best/
