@@ -26,7 +26,7 @@ public class ApiCoordinator {
      * Handles API requests and manages their results.
      * @param apiServices The API services to be handled.
      */
-    public ApiCoordinator(ApiService @NotNull ... apiServices) {
+    public ApiCoordinator(@NotNull ApiService @NotNull ... apiServices) {
         if (apiServices.length == 0) {
             throw new IllegalArgumentException("At least one API service must be provided.");
         }

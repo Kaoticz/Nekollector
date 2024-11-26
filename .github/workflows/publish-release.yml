@@ -27,7 +27,7 @@ jobs:
       - name: Package
         run: |
           New-Item -ItemType Directory -Path "$env:WORK_DIR_PATH\build"
-          Move-Item -Path ".\target\APIxels.zip" -Destination "$env:WORK_DIR_PATH\build\APIxels-win.zip"
+          Move-Item -Path ".\target\Nekollector.zip" -Destination "$env:WORK_DIR_PATH\build\Nekollector-win.zip"
 
       - name: "Upload Packages To Github Release"
         uses: "ncipollo/release-action@v1.14.0"
@@ -59,7 +59,7 @@ jobs:
       - name: Package
         run: |
           mkdir -p ~/build
-          mv ./target/APIxels.zip ~/build/APIxels-linux.zip
+          mv ./target/Nekollector.zip ~/build/Nekollector-linux.zip
 
       - name: "Upload Packages To Github Release"
         uses: "ncipollo/release-action@v1.14.0"
@@ -91,7 +91,7 @@ jobs:
       - name: Package
         run: |
           mkdir -p ~/build
-          mv ./target/APIxels.zip ~/build/APIxels-osx.zip
+          mv ./target/Nekollector.zip ~/build/Nekollector-osx.zip
 
       - name: "Upload Packages To Github Release"
         uses: "ncipollo/release-action@v1.14.0"
