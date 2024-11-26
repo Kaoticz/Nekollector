@@ -33,7 +33,8 @@ Enjoy a responsive UI that doesn’t explode when you resize the window (unlike 
 1. Head over to the [Releases] section.
 2. Download the `zip` for the version most appropriate to your operating system.
 3. Extract the `zip` file.
-4. Execute the file at `Nekollector/bin/Nekollector`
+4. If you are on Windows, execute the file at `Nekollector/bin/Nekollector.bat`
+5. If you are on Linux or macOS, execute the file at `Nekollector/bin/Nekollector`
 
 
 ## Compiling from Source
