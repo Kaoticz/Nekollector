@@ -162,9 +162,8 @@ public class MainController {
      */
     @FXML
     public void downloadImage(@NotNull ActionEvent ignoredEvent) {
-        // Verifique se há uma imagem válida antes de prosseguir
-        if (this.imageView.getImage() == null || this.imageView.getImage().equals(Statics.LOADING_IMAGE)) {
-            System.out.println("Nenhuma imagem disponível para download.");
+        if (this.imageView.getImage().equals(Statics.LOADING_IMAGE) || this.imageView.getImage().equals(Statics.ERROR_IMAGE)) {
+            System.out.println("There is no image to download. If you're seeing this message, that means this is a bug.");
             return;
         }
 

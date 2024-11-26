@@ -12,46 +12,8 @@ import java.util.Map;
  * Contains the data in the settings file.
  */
 public class SettingsModel {
-    private String nasaKey = "DEMO_KEY";
-    private String unsplashKey = "";
     private String defaultDownloadDirectory = "";
     private HashMap<String, String> favorites = new HashMap<>();
-
-    /**
-     * Gets the key for the Nasa APOD API.
-     * @return The API key.
-     */
-    @JsonGetter("nasa_key")
-    public @NotNull String getNasaKey() {
-        return nasaKey;
-    }
-
-    /**
-     * Sets the key for the Nasa APOD API.
-     * @param nasaKey The API key.
-     */
-    @JsonSetter("nasa_key")
-    public void setNasaKey(String nasaKey) {
-        this.nasaKey = nasaKey;
-    }
-
-    /**
-     * Gets the key for the Unsplash API.
-     * @return The API key.
-     */
-    @JsonGetter("unsplash_key")
-    public @NotNull String getUnsplashKey() {
-        return unsplashKey;
-    }
-
-    /**
-     * Sets the key for the Unsplash API.
-     * @param unsplashKey The API key.
-     */
-    @JsonSetter("unsplash_key")
-    public void setUnsplashKey(String unsplashKey) {
-        this.unsplashKey = unsplashKey;
-    }
 
     /**
      * Gets the default directory images are saved to.
@@ -67,7 +29,7 @@ public class SettingsModel {
      * @param defaultDownloadDirectory The directory to save to.
      */
     @JsonSetter("default_download_directory")
-    public void setDefaultDownloadDirectory(String defaultDownloadDirectory) {
+    public void setDefaultDownloadDirectory(@NotNull String defaultDownloadDirectory) {
         if (!Files.isDirectory(Path.of(defaultDownloadDirectory))) {
             throw new IllegalArgumentException("The provided path must point to a directory: " + defaultDownloadDirectory);
         }
@@ -89,7 +51,7 @@ public class SettingsModel {
      * @param favorites Key-pair values of the image URL and their name.
      */
     @JsonSetter("favorites")
-    private void setFavorites(HashMap<String, String> favorites) {
+    private void setFavorites(@NotNull HashMap<String, String> favorites) {
         this.favorites = favorites;
     }
 }
