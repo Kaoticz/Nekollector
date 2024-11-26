@@ -18,7 +18,7 @@ Because who doesn’t love catgirls?
 
 Scroll through images of catgirls one by one in a smooth, modern Java UI. (Yes, we said “smooth” and “Java” in the same sentence. Miracles happen.)
 
-### 🟊 Favorites
+### 🟊  Favorites
 
 Found the ultimate waifu? Hit that **Favorite** button, and she’ll be saved in the sidebar for easy access.
 
