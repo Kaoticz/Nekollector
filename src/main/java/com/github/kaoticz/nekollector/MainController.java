@@ -88,10 +88,10 @@ public class MainController {
             // Bind the buttons to key presses
             this.imageView.getScene().addEventFilter(KeyEvent.KEY_RELEASED,keyEvent -> {
                 var button = switch (keyEvent.getCode()) {
-                    case KeyCode.RIGHT -> nextButton;
-                    case KeyCode.LEFT -> previousButton;
-                    case KeyCode.SPACE -> downloadButton;
-                    case KeyCode.ENTER -> favoriteButton;
+                    case KeyCode.RIGHT  -> this.nextButton;
+                    case KeyCode.LEFT   -> this.previousButton;
+                    case KeyCode.SPACE  -> this.downloadButton;
+                    case KeyCode.ENTER  -> this.favoriteButton;
                     default -> null;
                 };
 

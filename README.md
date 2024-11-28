@@ -30,7 +30,7 @@ Enjoy a responsive UI that doesn’t explode when you resize the window (unlike 
 
 ## How to Get Started?
 
-1. Head over to the [Releases] section.
+1. Head over to the [Releases] page.
 2. Download the `zip` for the version most appropriate to your operating system.
 3. Extract the `zip` file.
 4. If you are on Windows, execute the file at `Nekollector/bin/Nekollector.bat`
@@ -39,7 +39,15 @@ Enjoy a responsive UI that doesn’t explode when you resize the window (unlike 
 
 ## Compiling from Source
 
-1. Clone this repository: `git clone https://github.com/Kaoticz/Nekollector`
+### Prerequisites
+
+- [OpenJDK 23]
+- [Maven]
+- [Git] (Optional)
+
+### Steps
+
+1. Clone this repository: `git clone https://github.com/Kaoticz/Nekollector` **or** download the source code from the [Releases] page.
 2. Navigate to the project's root directory: `cd Nekollector`
 3. Compile it with Maven: `mvn clean javafx:jlink`
 4. The compiled binaries should be located in `target/Nekollector`
@@ -61,7 +69,10 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
 You should have received a copy of the GNU General Public License along with this program. If not, see https://www.gnu.org/licenses/.
 
 
+[Git]: https://git-scm.com/downloads
 [nekos.best]: https://nekos.best/
 [nekos.moe]: https://nekos.moe/
 [Nekosia]: https://nekosia.cat/
+[Maven]: https://bitbucket.org/mjensen/mvnvm/src/master/
+[OpenJDK 23]: https://jdk.java.net/23
 [Releases]: ../../releases/latest
