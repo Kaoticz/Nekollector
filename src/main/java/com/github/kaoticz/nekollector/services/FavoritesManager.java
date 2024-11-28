@@ -29,7 +29,7 @@ public class FavoritesManager {
      * @param settingsManager The settings manager.
      */
     public FavoritesManager(@NotNull SettingsManager settingsManager) {
-        this.settingsManager = Objects.requireNonNull(settingsManager);
+        this.settingsManager = settingsManager;
     }
 
     /**

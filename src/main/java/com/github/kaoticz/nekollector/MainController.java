@@ -16,6 +16,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -71,6 +72,7 @@ public class MainController {
     @FXML
     public void initialize() {
         Platform.runLater(() -> {
+            // Hack around JavaFX questionable decision to not restrict children nodes to their parent's size
             this.imageContainer.widthProperty().addListener((_, _, newValue) -> {
                 if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE) && !this.imageView.getImage().equals(Statics.ERROR_IMAGE)) {
                     this.imageView.setFitWidth(newValue.doubleValue() - 10);
@@ -80,6 +82,21 @@ public class MainController {
             this.imageContainer.heightProperty().addListener((_, _, newValue) -> {
                 if (!this.imageView.getImage().equals(Statics.LOADING_IMAGE) && !this.imageView.getImage().equals(Statics.ERROR_IMAGE)) {
                     this.imageView.setFitHeight(newValue.doubleValue() - 10);
+                }
+            });
+
+            // Bind the buttons to key presses
+            this.imageView.getScene().addEventFilter(KeyEvent.KEY_RELEASED,keyEvent -> {
+                var button = switch (keyEvent.getCode()) {
+                    case KeyCode.RIGHT -> nextButton;
+                    case KeyCode.LEFT -> previousButton;
+                    case KeyCode.SPACE -> downloadButton;
+                    case KeyCode.ENTER -> favoriteButton;
+                    default -> null;
+                };
+
+                if (button != null && !button.isDisabled()) {
+                    button.fire();
                 }
             });
 
